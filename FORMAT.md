@@ -155,3 +155,11 @@ profile derivations remain **unresolved normative sections**. Golden complete-co
 vectors are also required. Until these are written and independently reproduced, `bbk/1`
 MUST remain draft.
 
+## Local identity state (not a `.bbk` object)
+
+Local application state uses a separate authenticated envelope and is not part of the
+backup-container format. Its header is `"bbk1st" || version(1) || reserved(0) ||
+identity_id(32) || nonce(12)`. The state key is the first 32 bytes of
+`SHAKE256(k_instance || "bbk/1/state-key")`. AES-256-GCM-SIV authenticates the complete
+52-byte header as AAD and appends a 16-byte tag to the encrypted state. The nonce is fresh
+random data for every save. Public-only identities MUST NOT seal or open local state.

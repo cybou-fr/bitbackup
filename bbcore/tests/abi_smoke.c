@@ -25,6 +25,21 @@ int main(void)
     if (bb_mnemonic_new(12, encoded, sizeof encoded, &encoded_len) != BB_ERR_INVALID_ARG) {
         return 5;
     }
+    {
+        const char *mnemonic =
+            "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about";
+        bb_identity *identity = NULL;
+        uint8_t state[128] = {0};
+        size_t state_len = 0;
+        if (bb_identity_open(mnemonic, "", 0, &identity) != BB_OK || identity == NULL) {
+            return 6;
+        }
+        if (bb_identity_state_seal(identity, input, sizeof input,
+                                   state, sizeof state, &state_len) != BB_OK) {
+            bb_identity_free(identity);
+            return 7;
+        }
+        bb_identity_free(identity);
+    }
     return 0;
 }
-

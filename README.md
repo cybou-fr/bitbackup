@@ -14,9 +14,9 @@ cryptography and all logic live in the client.
 
 * **Post-quantum first.** Hybrid ML-KEM-1024 + X25519 is designed to retain confidentiality
   while at least one component remains secure. The custom combiner has not been independently audited.
-* **Encrypted identity state.** The intended design keeps keys and private configuration
-  encrypted at rest and unlocks them from the mnemonic. The current UI prototype still uses
-  DPAPI-backed configuration and does not yet meet this design goal.
+* **Encrypted identity state.** Private configuration is sealed by `bbcore` with a key
+  derived from the unlocked identity; the UI never receives the raw state key. Legacy
+  DPAPI configuration is migrated after the first successful mnemonic unlock.
 * **Only chunks in the storage.** A folder or a bucket holding encrypted objects, nothing
   else — no manifests, no indexes, no marker files.
 * **Metadata-hiding storage.** File content, names, paths and authenticated logical layout

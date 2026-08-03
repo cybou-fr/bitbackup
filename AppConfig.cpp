@@ -6,9 +6,8 @@
 #include <string>
 #include <sstream>
 #include "AppConfig.h"
+#include "CoreBridge.h"
 
-typedef BOOL (WINAPI *TCryptProtectData)(DATA_BLOB*, LPCWSTR, DATA_BLOB*, PVOID,
-                                        CRYPTPROTECT_PROMPTSTRUCT*, DWORD, DATA_BLOB*);
 typedef BOOL (WINAPI *TCryptUnprotectData)(DATA_BLOB*, LPWSTR*, DATA_BLOB*, PVOID,
                                           CRYPTPROTECT_PROMPTSTRUCT*, DWORD, DATA_BLOB*);
 
@@ -16,11 +15,6 @@ static HMODULE CryptModule()
 {
     static HMODULE module = LoadLibraryW(L"crypt32.dll");
     return module;
-}
-
-static TCryptProtectData ProtectFunction()
-{
-    return reinterpret_cast<TCryptProtectData>(GetProcAddress(CryptModule(), "CryptProtectData"));
 }
 
 static TCryptUnprotectData UnprotectFunction()
@@ -95,10 +89,8 @@ bool TAppConfig::Save() const
     for (const auto &folder : Folders)
         text << "F|" << Hex(folder.Path) << '|' << Hex(folder.RootLabel) << "\n";
     std::string plain = text.str();
-    DATA_BLOB input = {(DWORD)plain.size(), (BYTE*)plain.data()}, output = {};
-    TCryptProtectData protect = ProtectFunction();
-    if (!protect || !protect(&input, L"BitBackup configuration", nullptr, nullptr, nullptr,
-                             CRYPTPROTECT_UI_FORBIDDEN, &output)) {
+    std::vector<unsigned char> sealed;
+    if (!TCoreBridge::Instance().SealState(plain.data(), plain.size(), sealed)) {
         SecureZeroMemory(plain.data(), plain.size());
         return false;
     }
@@ -109,11 +101,12 @@ bool TAppConfig::Save() const
     bool ok = false;
     if (file != INVALID_HANDLE_VALUE) {
         DWORD written = 0;
-        ok = WriteFile(file, output.pbData, output.cbData, &written, nullptr)
-          && written == output.cbData && FlushFileBuffers(file);
+        ok = sealed.size() <= MAXDWORD
+          && WriteFile(file, sealed.data(), (DWORD)sealed.size(), &written, nullptr)
+          && written == sealed.size() && FlushFileBuffers(file);
         CloseHandle(file);
     }
-    LocalFree(output.pbData);
+    if (!sealed.empty()) SecureZeroMemory(sealed.data(), sealed.size());
     if (ok)
         ok = MoveFileExW(temporary.c_str(), path.c_str(),
                          MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH);
@@ -139,12 +132,23 @@ bool TAppConfig::Load()
     bool ok = size > 0 && ReadFile(file, encrypted.data(), size, &read, nullptr) && read == size;
     CloseHandle(file);
     if (!ok) return false;
-    DATA_BLOB input = {size, encrypted.data()}, output = {};
-    TCryptUnprotectData unprotect = UnprotectFunction();
-    if (!unprotect || !unprotect(&input, nullptr, nullptr, nullptr, nullptr,
-                                 CRYPTPROTECT_UI_FORBIDDEN, &output)) return false;
-    std::string plain((char*)output.pbData, output.cbData);
-    SecureZeroMemory(output.pbData, output.cbData); LocalFree(output.pbData);
+    const bool identityState = size >= 6 && std::memcmp(encrypted.data(), "bbk1st", 6) == 0;
+    bool migrated = false;
+    std::vector<unsigned char> opened;
+    if (identityState) {
+        if (!TCoreBridge::Instance().OpenState(encrypted.data(), encrypted.size(), opened))
+            return false;
+    } else {
+        DATA_BLOB input = {size, encrypted.data()}, output = {};
+        TCryptUnprotectData unprotect = UnprotectFunction();
+        if (!unprotect || !unprotect(&input, nullptr, nullptr, nullptr, nullptr,
+                                     CRYPTPROTECT_UI_FORBIDDEN, &output)) return false;
+        opened.assign(output.pbData, output.pbData + output.cbData);
+        SecureZeroMemory(output.pbData, output.cbData); LocalFree(output.pbData);
+        migrated = true;
+    }
+    std::string plain((char*)opened.data(), opened.size());
+    if (!opened.empty()) SecureZeroMemory(opened.data(), opened.size());
     bool parsedStorage = false;
     TStorageConfig parsedStorageValue;
     std::vector<TFolderConfig> parsedFolders;
@@ -181,6 +185,10 @@ bool TAppConfig::Load()
     if (parsedStorage) Storage = parsedStorageValue;
     Folders.swap(parsedFolders);
     SecureZeroMemory(plain.data(), plain.size());
+    if (migrated && !Save()) {
+        Clear();
+        return false;
+    }
     return true;
 }
 

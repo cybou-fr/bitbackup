@@ -13,6 +13,10 @@ typedef bb_status (BB_CALL *TMnemonicNew)(unsigned, char *, size_t, size_t *);
 typedef bb_status (BB_CALL *TMnemonicValidate)(const char *);
 typedef bb_status (BB_CALL *TIdentityOpen)(const char *, const char *, uint32_t, bb_identity **);
 typedef void (BB_CALL *TIdentityFree)(bb_identity *);
+typedef bb_status (BB_CALL *TStateSeal)(const bb_identity *, const uint8_t *, size_t,
+                                        uint8_t *, size_t, size_t *);
+typedef bb_status (BB_CALL *TStateOpen)(const bb_identity *, const uint8_t *, size_t,
+                                        uint8_t *, size_t, size_t *);
 
 struct TApi {
     TInit Init = nullptr;
@@ -21,6 +25,8 @@ struct TApi {
     TMnemonicValidate MnemonicValidate = nullptr;
     TIdentityOpen IdentityOpen = nullptr;
     TIdentityFree IdentityFree = nullptr;
+    TStateSeal StateSeal = nullptr;
+    TStateOpen StateOpen = nullptr;
 };
 
 TApi Api;
@@ -76,7 +82,9 @@ bool TCoreBridge::EnsureLoaded()
      || !Resolve(module, "bb_mnemonic_new", Api.MnemonicNew)
      || !Resolve(module, "bb_mnemonic_validate", Api.MnemonicValidate)
      || !Resolve(module, "bb_identity_open", Api.IdentityOpen)
-     || !Resolve(module, "bb_identity_free", Api.IdentityFree)) {
+     || !Resolve(module, "bb_identity_free", Api.IdentityFree)
+     || !Resolve(module, "bb_identity_state_seal", Api.StateSeal)
+     || !Resolve(module, "bb_identity_state_open", Api.StateOpen)) {
         FreeLibrary(module);
         FLastError = L"bbcore.dll does not expose the required C ABI.";
         return false;
@@ -136,4 +144,64 @@ void TCoreBridge::Lock()
     if (FIdentity != nullptr && Api.IdentityFree != nullptr)
         Api.IdentityFree(FIdentity);
     FIdentity = nullptr;
+}
+
+bool TCoreBridge::SealState(const void *plain, std::size_t plainLength,
+                            std::vector<unsigned char> &sealed)
+{
+    sealed.clear();
+    if (FIdentity == nullptr || Api.StateSeal == nullptr) {
+        FLastError = L"Identity is locked.";
+        return false;
+    }
+    std::size_t needed = 0;
+    bb_status status = Api.StateSeal(FIdentity,
+        static_cast<const uint8_t *>(plain), plainLength, nullptr, 0, &needed);
+    if (status != BB_ERR_BUFFER_TOO_SMALL) {
+        FLastError = StatusMessage(status);
+        return false;
+    }
+    sealed.resize(needed);
+    status = Api.StateSeal(FIdentity, static_cast<const uint8_t *>(plain), plainLength,
+                           sealed.data(), sealed.size(), &needed);
+    if (status != BB_OK) {
+        SecureZeroMemory(sealed.data(), sealed.size());
+        sealed.clear();
+        FLastError = StatusMessage(status);
+        return false;
+    }
+    sealed.resize(needed);
+    FLastError = L"";
+    return true;
+}
+
+bool TCoreBridge::OpenState(const void *sealed, std::size_t sealedLength,
+                            std::vector<unsigned char> &plain)
+{
+    plain.clear();
+    if (FIdentity == nullptr || Api.StateOpen == nullptr) {
+        FLastError = L"Identity is locked.";
+        return false;
+    }
+    std::size_t needed = 0;
+    bb_status status = Api.StateOpen(FIdentity,
+        static_cast<const uint8_t *>(sealed), sealedLength, nullptr, 0, &needed);
+    if (status != BB_ERR_BUFFER_TOO_SMALL) {
+        FLastError = StatusMessage(status);
+        return false;
+    }
+    plain.resize(needed);
+    unsigned char empty = 0;
+    unsigned char *target = needed == 0 ? &empty : plain.data();
+    status = Api.StateOpen(FIdentity, static_cast<const uint8_t *>(sealed), sealedLength,
+                           target, plain.size(), &needed);
+    if (status != BB_OK) {
+        if (!plain.empty()) SecureZeroMemory(plain.data(), plain.size());
+        plain.clear();
+        FLastError = StatusMessage(status);
+        return false;
+    }
+    plain.resize(needed);
+    FLastError = L"";
+    return true;
 }

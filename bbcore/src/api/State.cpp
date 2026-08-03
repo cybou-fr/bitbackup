@@ -51,7 +51,7 @@ BB_API bb_status BB_CALL bb_identity_state_seal(
     }
     const std::size_t needed = kHeaderLen + plain_len + BB_TAG_LEN;
     if (out_len != nullptr) *out_len = needed;
-    if (out == nullptr || cap < needed) return BB_ERR_BUFFER_TOO_SMALL;
+    if ((out == nullptr && needed != 0) || cap < needed) return BB_ERR_BUFFER_TOO_SMALL;
 
     std::memcpy(out, kMagic, sizeof kMagic);
     out[6] = kVersion;
@@ -114,4 +114,3 @@ BB_API bb_status BB_CALL bb_identity_state_open(
     }
     return BB_OK;
 }
-
