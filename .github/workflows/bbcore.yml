@@ -1,0 +1,99 @@
+name: bbcore
+
+on:
+  push:
+    paths:
+      - "bbcore/**"
+      - "FORMAT.md"
+      - ".github/workflows/bbcore.yml"
+  pull_request:
+    paths:
+      - "bbcore/**"
+      - "FORMAT.md"
+      - ".github/workflows/bbcore.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows MSVC shared
+            os: windows-2022
+            shared: "ON"
+            triplet: x64-windows-static-md
+          - name: Windows MSVC static
+            os: windows-2022
+            shared: "OFF"
+            triplet: x64-windows-static-md
+          - name: Linux GCC
+            os: ubuntu-24.04
+            shared: "ON"
+            triplet: x64-linux
+            cc: gcc
+            cxx: g++
+          - name: Linux Clang ASan UBSan
+            os: ubuntu-24.04
+            shared: "ON"
+            triplet: x64-linux
+            cc: clang
+            cxx: clang++
+            sanitize: "-fsanitize=address,undefined -fno-omit-frame-pointer"
+          - name: macOS arm64
+            os: macos-14
+            shared: "ON"
+            triplet: arm64-osx
+            cc: clang
+            cxx: clang++
+
+    runs-on: ${{ matrix.os }}
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+
+    steps:
+      - name: Check out BitBackup
+        uses: actions/checkout@v4
+
+      - name: Check out pinned vcpkg
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/vcpkg
+          ref: 39344dff01c5a5a0134caf2624cdd492f05d30ea
+          path: vcpkg
+
+      - name: Bootstrap vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
+
+      - name: Bootstrap vcpkg (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+      - name: Configure
+        shell: bash
+        run: >-
+          cmake -S bbcore -B build/ci
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+          -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+          -DBBCORE_SHARED=${{ matrix.shared }}
+          -DBBCORE_BUILD_TESTS=ON
+          -DCMAKE_C_FLAGS="${{ matrix.sanitize }}"
+          -DCMAKE_CXX_FLAGS="${{ matrix.sanitize }}"
+          -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.sanitize }}"
+          -DCMAKE_SHARED_LINKER_FLAGS="${{ matrix.sanitize }}"
+
+      - name: Build
+        run: cmake --build build/ci --config Release --parallel
+
+      - name: Test
+        run: ctest --test-dir build/ci -C Release --output-on-failure
+
