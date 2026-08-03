@@ -1,10 +1,9 @@
-﻿object Form1: TForm1
+object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'BitBackup'
   ClientHeight = 664
   ClientWidth = 1000
-  Fill.Color = xFF090D14
   FormFactor.Width = 1000
   FormFactor.Height = 665
   FormFactor.Devices = [Desktop]
@@ -13,175 +12,198 @@
   DesignerMasterStyle = 0
   object Sidebar: TRectangle
     Align = Left
-    Width = 210.000000000000000000
     Fill.Color = xFF080C13
-    Stroke.Color = xFF243044
+    Position.Y = 61.000000000000000000
     Sides = [Right]
+    Size.Width = 210.000000000000000000
+    Size.Height = 603.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFF243044
     object BrandLabel: TLabel
+      StyledSettings = []
       Position.X = 24.000000000000000000
       Position.Y = 24.000000000000000000
       Size.Width = 160.000000000000000000
       Size.Height = 28.000000000000000000
-      StyledSettings = []
-      Text = 'BitBackup'
+      Size.PlatformDefault = False
       TextSettings.Font.Size = 18.000000000000000000
       TextSettings.FontColor = xFFF3F6FB
+      Text = 'BitBackup'
     end
     object BrandSubtitle: TLabel
+      StyledSettings = []
       Position.X = 24.000000000000000000
       Position.Y = 52.000000000000000000
       Size.Width = 165.000000000000000000
       Size.Height = 22.000000000000000000
-      StyledSettings = []
-      Text = 'Private backup workspace'
+      Size.PlatformDefault = False
       TextSettings.Font.Size = 10.000000000000000000
       TextSettings.FontColor = xFF657188
+      Text = 'Private backup workspace'
     end
     object NavOverview: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 108.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavOverviewClick
       object NavOverviewLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Overview'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFFF3F6FB
-        TextSettings.VertAlign = Center
+        Text = 'Overview'
       end
     end
     object NavSetup: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 160.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavSetupClick
       object NavSetupLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Setup'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFF98A4B7
-        TextSettings.VertAlign = Center
+        Text = 'Setup'
       end
     end
     object NavIdentity: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 212.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavSetupClick
       object NavIdentityLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Identity'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFF98A4B7
-        TextSettings.VertAlign = Center
+        Text = 'Identity'
       end
     end
     object NavStorage: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 264.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavSetupClick
       object NavStorageLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Storage'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFF98A4B7
-        TextSettings.VertAlign = Center
+        Text = 'Storage'
       end
     end
     object NavSources: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 316.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavSetupClick
       object NavSourcesLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Backup folders'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFF98A4B7
-        TextSettings.VertAlign = Center
+        Text = 'Backup folders'
       end
     end
     object NavRestore: TRectangle
+      Fill.Color = xFF080C13
       Position.X = 15.000000000000000000
       Position.Y = 368.000000000000000000
       Size.Width = 180.000000000000000000
       Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
       XRadius = 9.000000000000000000
       YRadius = 9.000000000000000000
-      Fill.Color = xFF080C13
-      Stroke.Kind = None
       OnClick = NavLockedClick
       object NavRestoreLabel: TLabel
         Align = Client
-        Margins.Left = 18.000000000000000000
         StyledSettings = []
-        Text = 'Lock / Restore'
-        HitTest = False
+        Margins.Left = 18.000000000000000000
+        Size.Width = 162.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
         TextSettings.Font.Size = 13.000000000000000000
         TextSettings.FontColor = xFF98A4B7
-        TextSettings.VertAlign = Center
+        Text = 'Lock / Restore'
       end
     end
   end
   object Topbar: TRectangle
     Align = Top
-    Height = 61.000000000000000000
     Fill.Color = xFF0B111A
-    Stroke.Color = xFF243044
     Sides = [Bottom]
+    Size.Width = 1000.000000000000000000
+    Size.Height = 61.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFF243044
     object SessionStatusLabel: TLabel
       Align = Client
-      Margins.Left = 28.000000000000000000
       StyledSettings = []
-      Text = 'Locked     |     Mnemonic required'
-      TextSettings.Font.Size = 12.000000000000000000
+      Margins.Left = 28.000000000000000000
+      Size.Width = 972.000000000000000000
+      Size.Height = 61.000000000000000000
+      Size.PlatformDefault = False
       TextSettings.FontColor = xFF5CDB9B
-      TextSettings.VertAlign = Center
+      Text = 'Locked     |     Mnemonic required'
     end
   end
   object ContentHost: TLayout
     Align = Client
+    Size.Width = 790.000000000000000000
+    Size.Height = 603.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
   end
 end
-

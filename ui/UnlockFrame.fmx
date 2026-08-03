@@ -66,8 +66,67 @@
         TextSettings.Font.Size = 11.000000000000000000
         TextSettings.FontColor = xFF657188
       end
+      object RevealButton: TRectangle
+        Position.Y = 282.000000000000000000
+        Size.Width = 184.000000000000000000
+        Size.Height = 38.000000000000000000
+        XRadius = 8.000000000000000000
+        YRadius = 8.000000000000000000
+        Fill.Color = xFF111A27
+        Stroke.Color = xFF243044
+        OnClick = RevealClick
+        object RevealButtonLabel: TLabel
+          Align = Client
+          StyledSettings = []
+          Text = 'Reveal'
+          HitTest = False
+          TextSettings.FontColor = xFFF3F6FB
+          TextSettings.HorzAlign = Center
+          TextSettings.VertAlign = Center
+        end
+      end
+      object PasteButton: TRectangle
+        Position.X = 208.000000000000000000
+        Position.Y = 282.000000000000000000
+        Size.Width = 184.000000000000000000
+        Size.Height = 38.000000000000000000
+        XRadius = 8.000000000000000000
+        YRadius = 8.000000000000000000
+        Fill.Color = xFF111A27
+        Stroke.Color = xFF243044
+        OnClick = PasteClick
+        object PasteButtonLabel: TLabel
+          Align = Client
+          StyledSettings = []
+          Text = 'Paste phrase'
+          HitTest = False
+          TextSettings.FontColor = xFFF3F6FB
+          TextSettings.HorzAlign = Center
+          TextSettings.VertAlign = Center
+        end
+      end
+      object CopyButton: TRectangle
+        Position.X = 416.000000000000000000
+        Position.Y = 282.000000000000000000
+        Size.Width = 184.000000000000000000
+        Size.Height = 38.000000000000000000
+        XRadius = 8.000000000000000000
+        YRadius = 8.000000000000000000
+        Fill.Color = xFF111A27
+        Stroke.Color = xFF243044
+        OnClick = CopyClick
+        object CopyButtonLabel: TLabel
+          Align = Client
+          StyledSettings = []
+          Text = 'Copy generated'
+          HitTest = False
+          TextSettings.FontColor = xFFF3F6FB
+          TextSettings.HorzAlign = Center
+          TextSettings.VertAlign = Center
+        end
+      end
       object ContinueButton: TRectangle
-        Position.Y = 298.000000000000000000
+        Position.Y = 344.000000000000000000
         Size.Width = 286.000000000000000000
         Size.Height = 52.000000000000000000
         XRadius = 9.000000000000000000
@@ -88,7 +147,7 @@
       end
       object GenerateButton: TRectangle
         Position.X = 304.000000000000000000
-        Position.Y = 298.000000000000000000
+        Position.Y = 344.000000000000000000
         Size.Width = 296.000000000000000000
         Size.Height = 52.000000000000000000
         XRadius = 9.000000000000000000
@@ -108,7 +167,7 @@
         end
       end
       object SecurityNote: TLabel
-        Position.Y = 382.000000000000000000
+        Position.Y = 416.000000000000000000
         Size.Width = 600.000000000000000000
         Size.Height = 54.000000000000000000
         StyledSettings = []
@@ -116,6 +175,13 @@
         TextSettings.Font.Size = 11.000000000000000000
         TextSettings.FontColor = xFF98A4B7
         TextSettings.WordWrap = True
+      end
+      object ClipboardTimer: TTimer
+        Enabled = False
+        Interval = 30000
+        OnTimer = ClipboardTimerTimer
+        Left = 552
+        Top = 16
       end
     end
   end

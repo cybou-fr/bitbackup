@@ -8,6 +8,11 @@
 #include <System.StartUpCopy.hpp>
 //---------------------------------------------------------------------------
 USEFORM("Unit1.cpp", Form1);
+USEFORM("ui\\UnlockFrame.cpp", UnlockFrame);
+USEFORM("ui\\SetupFrame.cpp", SetupFrame);
+USEFORM("ui\\OverviewFrame.cpp", OverviewFrame);
+USEFORM("ui\\StorageDialog.cpp", StorageDialogForm);
+USEUNIT("ui\\AppConfig.cpp");
 //---------------------------------------------------------------------------
 extern "C" int FMXmain()
 {

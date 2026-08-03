@@ -48,6 +48,8 @@ public:
     UnicodeString StorageType() const;
     UnicodeString DisplayName() const;
     UnicodeString Location() const;
+    UnicodeString User() const;
+    UnicodeString Secret() const;
 };
 
 #endif

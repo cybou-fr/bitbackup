@@ -77,3 +77,13 @@ UnicodeString TStorageDialogForm::Location() const
 {
     return LocationEdit->Text.Trim();
 }
+
+UnicodeString TStorageDialogForm::User() const
+{
+    return UserEdit->Text.Trim();
+}
+
+UnicodeString TStorageDialogForm::Secret() const
+{
+    return SecretEdit->Text;
+}
