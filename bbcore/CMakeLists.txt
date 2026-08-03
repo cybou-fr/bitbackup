@@ -34,6 +34,7 @@ endif()
 set(BBCORE_SOURCES
     src/api/Status.cpp
     src/api/Names.cpp
+    src/crypto/Hash.cpp
     src/crypto/Kem.cpp
     src/crypto/Shake.cpp
     src/crypto/X25519.cpp
@@ -105,13 +106,17 @@ endif()
 # AES-256-GCM-SIV есть только в default provider OpenSSL, но не в FIPS
 # provider, поэтому полный FIPS mode продукт не заявляет. См. §30.
 #
-# Ещё предстоит добавить: BLAKE3 и zstd. Reed-Solomon пишется свой.
+# BLAKE3 идёт отдельным портом: в OpenSSL его нет, а формат опирается на него
+# в content_hash, file_id, Merkle-дереве и identity_id (§4, §6, §11, §13).
+#
+# Ещё предстоит добавить: zstd. Reed-Solomon пишется свой.
 # ---------------------------------------------------------------------------
 
 find_package(OpenSSL 3.5 REQUIRED)
+find_package(blake3 CONFIG REQUIRED)
 
 # PUBLIC на объектной библиотеке: и DLL, и тесты линкуются с одним OpenSSL.
-target_link_libraries(bbcore_objs PUBLIC OpenSSL::Crypto)
+target_link_libraries(bbcore_objs PUBLIC OpenSSL::Crypto BLAKE3::blake3)
 
 # Проверяем не только версию, но и наличие самого алгоритма: собраться с
 # OpenSSL без ML-KEM и узнать об этом в рантайме — худший из вариантов.

@@ -1,6 +1,7 @@
 add_executable(bbcore_tests
     main.cpp
     test_base32.cpp
+    test_blake3.cpp
     test_object_name.cpp
     test_kem.cpp
     test_shake.cpp

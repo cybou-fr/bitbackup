@@ -68,22 +68,26 @@ partially implemented.
 | SHAKE256 (KDF/XOF) | implemented, tested against FIPS 202 vectors |
 | ML-KEM-1024 | implemented, deterministic keygen from seed verified |
 | X25519 | implemented, tested against RFC 7748 vectors |
+| BLAKE3 | implemented, tested against the official vectors |
 | Identity derivation, BIP39 | not started |
 | Hybrid KEM combiner | not started |
 | AES-256-GCM-SIV | not started |
-| BLAKE3 | not started |
 | Splitter, Merkle, CBOR | not started |
 | Reed–Solomon | not started |
 | Storage backends | not started |
 | Storage indexing | not started |
-| C++Builder UI | not started |
+| C++Builder UI | screens exist, core not wired in |
 
 ## Layout
 
 ```text
 bbcore/     cross-platform core: C++17, CMake, flat C ABI, no UI
-app/        C++Builder + FireMonkey client, interface only
+./          C++Builder + FireMonkey client, interface only
 ```
+
+The client sits in the repository root rather than a subdirectory: the C++Builder MSBuild
+toolchain resolves `.fmx` form resources relative to the project file, and moving the units
+into a folder broke the build.
 
 The core is deliberately kept out of C++Builder: OpenSSL 3.5+, BLAKE3 and zstd build with
 MSVC/clang and CMake. The UI loads the resulting DLL through the C ABI.
@@ -92,7 +96,7 @@ MSVC/clang and CMake. The UI loads the resulting DLL through the C ABI.
 
 Requires CMake 3.21+, a C++17 compiler, and [vcpkg](https://github.com/microsoft/vcpkg)
 with `VCPKG_ROOT` set. Dependencies are pinned in `bbcore/vcpkg.json`; the first configure
-builds OpenSSL from source and takes several minutes.
+builds OpenSSL from source and takes several minutes. BLAKE3 comes from the same manifest.
 
 ```bash
 cd bbcore && cmake --preset windows && cmake --build --preset windows && ctest --preset windows

@@ -12,6 +12,10 @@
     {
       "name": "openssl",
       "default-features": false
+    },
+    {
+      "name": "blake3",
+      "default-features": false
     }
   ],
 
@@ -19,6 +23,10 @@
     {
       "name": "openssl",
       "version": "3.6.3"
+    },
+    {
+      "name": "blake3",
+      "version": "1.8.5"
     }
   ]
 }
