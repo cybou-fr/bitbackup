@@ -73,7 +73,8 @@ partially implemented.
 | AES-256-GCM-SIV | implemented, tested against RFC 8452 |
 | ML-DSA-87 signatures | not started, needed only for transfers |
 | Hybrid KEM combiner | implemented, golden vectors frozen, **not yet audited** |
-| Splitter, Merkle, CBOR | not started |
+| Splitter, Merkle, CBOR metadata | implemented, tested |
+| Compression (zstd) | not started |
 | Reed–Solomon | not started |
 | Storage backends | not started |
 | Storage indexing | not started |

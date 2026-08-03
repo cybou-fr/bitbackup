@@ -37,6 +37,7 @@ set(BBCORE_SOURCES
     src/api/Identity.cpp
     src/core/KeySchedule.cpp
     src/core/MerkleTree.cpp
+    src/core/MetadataCodec.cpp
     src/core/Splitter.cpp
     src/core/StripeBuilder.cpp
     src/crypto/Aead.cpp
@@ -49,6 +50,7 @@ set(BBCORE_SOURCES
     src/util/Base32.cpp
     src/util/Bip39.cpp
     src/util/Bip39Wordlist.cpp
+    src/util/Cbor.cpp
     src/util/SecureMemory.cpp
 )
 

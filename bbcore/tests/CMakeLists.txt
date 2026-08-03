@@ -10,6 +10,7 @@ add_executable(bbcore_tests
     test_identity.cpp
     test_key_schedule.cpp
     test_merkle.cpp
+    test_metadata.cpp
     test_object_name.cpp
     test_splitter.cpp
     test_stripe_builder.cpp
