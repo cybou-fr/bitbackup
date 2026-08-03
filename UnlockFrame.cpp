@@ -1,6 +1,7 @@
 #include <fmx.h>
 #pragma hdrstop
 #include "UnlockFrame.h"
+#include "CoreBridge.h"
 #include <FMX.Platform.hpp>
 #include <System.Rtti.hpp>
 
@@ -49,18 +50,31 @@ void TUnlockFrame::SetGeneratedMnemonic(const UnicodeString &value)
 
 void __fastcall TUnlockFrame::ContinueClick(TObject *Sender)
 {
-    MnemonicHint->Text = MnemonicEdit->Text.Trim().IsEmpty()
-        ? L"Enter your 12 or 24 recovery words first."
-        : L"Mnemonic accepted for this UI preview.";
-    MnemonicHint->TextSettings->FontColor = MnemonicEdit->Text.Trim().IsEmpty()
-        ? 0xFFFF667A : 0xFF5CDB9B;
-    if (!MnemonicEdit->Text.Trim().IsEmpty() && FOnUnlocked)
-        FOnUnlocked(this);
+    const UnicodeString mnemonic = MnemonicEdit->Text.Trim();
+    if (mnemonic.IsEmpty()) {
+        MnemonicHint->Text = L"Enter your recovery words first.";
+        MnemonicHint->TextSettings->FontColor = 0xFFFF667A;
+        return;
+    }
+    if (!TCoreBridge::Instance().Unlock(mnemonic)) {
+        MnemonicHint->Text = TCoreBridge::Instance().LastError();
+        MnemonicHint->TextSettings->FontColor = 0xFFFF667A;
+        return;
+    }
+    MnemonicHint->Text = L"Identity unlocked for this session.";
+    MnemonicHint->TextSettings->FontColor = 0xFF5CDB9B;
+    if (FOnUnlocked) FOnUnlocked(this);
 }
 
 void __fastcall TUnlockFrame::GenerateClick(TObject *Sender)
 {
-    MnemonicHint->Text = L"Core integration pending; no secret was generated.";
+    UnicodeString mnemonic;
+    if (!TCoreBridge::Instance().GenerateMnemonic(mnemonic)) {
+        MnemonicHint->Text = TCoreBridge::Instance().LastError();
+        MnemonicHint->TextSettings->FontColor = 0xFFFF667A;
+        return;
+    }
+    SetGeneratedMnemonic(mnemonic);
     MnemonicHint->TextSettings->FontColor = 0xFFF2BD5C;
 }
 

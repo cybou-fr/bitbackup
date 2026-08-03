@@ -205,6 +205,10 @@
             <DependentOn>AppConfig.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="CoreBridge.cpp">
+            <DependentOn>CoreBridge.h</DependentOn>
+            <BuildOrder>8</BuildOrder>
+        </CppCompile>
         <CppCompile Include="UnlockFrame.cpp">
             <Form>UnlockFrame</Form>
             <FormType>fmx</FormType>

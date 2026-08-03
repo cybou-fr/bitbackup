@@ -6,6 +6,7 @@
 #include "SetupFrame.h"
 #include "OverviewFrame.h"
 #include "AppConfig.h"
+#include "CoreBridge.h"
 
 #pragma package(smart_init)
 #pragma resource "*.fmx"
@@ -84,6 +85,7 @@ void __fastcall TForm1::NavSetupClick(TObject *Sender)
 void __fastcall TForm1::NavLockedClick(TObject *Sender)
 {
     FUnlocked = false;
+    TCoreBridge::Instance().Lock();
     TAppConfig::Instance().Clear();
     FSetupFrame->ClearConfiguration();
     ShowFrame(FUnlockFrame);

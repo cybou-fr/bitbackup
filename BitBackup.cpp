@@ -13,6 +13,7 @@ USEFORM("SetupFrame.cpp", SetupFrame);
 USEFORM("OverviewFrame.cpp", OverviewFrame);
 USEFORM("StorageDialog.cpp", StorageDialogForm);
 USEUNIT("AppConfig.cpp");
+USEUNIT("CoreBridge.cpp");
 //---------------------------------------------------------------------------
 extern "C" int FMXmain()
 {
