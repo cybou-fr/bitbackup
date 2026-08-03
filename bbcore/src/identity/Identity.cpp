@@ -71,6 +71,13 @@ bool Identity::FromMnemonic(std::string_view mnemonic,
                             std::uint32_t    index,
                             Identity&        out)
 {
+    // BIP39 требует NFKD. Пока ICU/utf8proc не подключён, принимаем только
+    // printable ASCII, чтобы визуально одинаковый Unicode не породил другую identity.
+    for (const unsigned char byte : passphrase) {
+        if (byte < 0x20u || byte > 0x7Eu) {
+            return false;
+        }
+    }
     out.Wipe();
 
     if (!Bip39Validate(mnemonic)) {

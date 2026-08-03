@@ -12,17 +12,16 @@ cryptography and all logic live in the client.
 
 ## Properties
 
-* **Post-quantum first.** Hybrid ML-KEM-1024 + X25519 — an attacker has to break both schemes.
-  Protects against "harvest now, decrypt later."
-* **Nothing readable on the device.** No keys on disk. The client starts and waits for your
-  mnemonic. Each identity's state lives in its own file encrypted to that identity's public
-  key; without the mnemonic it is indistinguishable from random bytes. A lost or seized
-  device reveals neither your data nor where it is backed up.
+* **Post-quantum first.** Hybrid ML-KEM-1024 + X25519 is designed to retain confidentiality
+  while at least one component remains secure. The custom combiner has not been independently audited.
+* **Encrypted identity state.** The intended design keeps keys and private configuration
+  encrypted at rest and unlocks them from the mnemonic. The current UI prototype still uses
+  DPAPI-backed configuration and does not yet meet this design goal.
 * **Only chunks in the storage.** A folder or a bucket holding encrypted objects, nothing
   else — no manifests, no indexes, no marker files.
-* **Zero-knowledge storage.** The provider never learns file names, paths, original sizes,
-  chunk counts, chunk ordering, which objects are data vs. parity, or which objects belong
-  to the same file.
+* **Metadata-hiding storage.** File content, names, paths and authenticated logical layout
+  are encrypted. Storage can still infer approximate relationships from identity prefixes,
+  object sizes, upload timing, and network or account metadata.
 * **Restore from a single chunk.** No catalog, no database, no access to the original
   storage required — your mnemonic and any one `.bbk` file are enough.
 * **Damage tolerance.** Reed–Solomon 8+3 survives the loss of any three elements of every
@@ -57,12 +56,12 @@ Restoring reverses the pipeline and verifies the result against the original BLA
 
 ## Status
 
-Early development. The `bbk/1` container format is designed and frozen; the core is
-partially implemented.
+Early development. The `bbk/1` container format is under active design; the core is
+partially implemented and must not yet be used for valuable data.
 
 | Component | State |
 |---|---|
-| Format specification | done |
+| Format specification | in progress; normative public specification not yet published |
 | Library C ABI | declared |
 | base32, object names | implemented, tested |
 | SHAKE256 (KDF/XOF) | implemented, tested against FIPS 202 vectors |

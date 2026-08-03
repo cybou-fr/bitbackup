@@ -132,9 +132,7 @@ bool Bip39FromEntropy(const std::uint8_t* entropy, std::size_t len,
 bool Bip39Generate(unsigned words, std::string& out_mnemonic)
 {
     std::size_t entropy_len = 0;
-    if (words == kBip39Words12) {
-        entropy_len = kBip39Entropy12;
-    } else if (words == kBip39Words24) {
+    if (words == kBip39Words24) {
         entropy_len = kBip39Entropy24;
     } else {
         return false;

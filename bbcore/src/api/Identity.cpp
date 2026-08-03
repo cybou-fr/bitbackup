@@ -2,7 +2,7 @@
 
 #include "bbcore/bbcore.h"
 
-#include "identity/Identity.h"
+#include "api/IdentityHandle.h"
 #include "util/Base32.h"
 #include "util/Bip39.h"
 
@@ -10,10 +10,6 @@
 #include <new>
 #include <string>
 #include <tuple>
-
-struct bb_identity {
-    bb::Identity impl;
-};
 
 namespace {
 
@@ -27,7 +23,7 @@ const bb::Identity* Impl(const bb_identity* identity)
 BB_API bb_status BB_CALL bb_mnemonic_new(
     unsigned words, char* out, size_t cap, size_t* out_len)
 {
-    if (words != bb::kBip39Words12 && words != bb::kBip39Words24) {
+    if (words != bb::kBip39Words24) {
         return BB_ERR_INVALID_ARG;
     }
 

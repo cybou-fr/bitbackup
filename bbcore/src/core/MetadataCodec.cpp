@@ -1,8 +1,11 @@
 #include "core/MetadataCodec.h"
 
+#include "core/StripeBuilder.h"
 #include "util/Cbor.h"
 
+#include <algorithm>
 #include <cstring>
+#include <limits>
 
 namespace bb {
 namespace {
@@ -10,7 +13,7 @@ namespace {
 /// Ключи словарей §13. Порядок в каждом списке — канонический по RFC 8949
 /// §4.2.1: сначала по длине кодированного ключа, потом побайтово. Он же
 /// проверяется читателем, поэтому ошибка в порядке ловится round-trip тестом.
-constexpr std::size_t kTopLevelFields = 7;
+constexpr std::size_t kTopLevelFields = 8;
 constexpr std::size_t kFileFields     = 8;
 constexpr std::size_t kStreamFields   = 2;
 constexpr std::size_t kSplitFields    = 4;
@@ -21,6 +24,27 @@ constexpr std::size_t kSelfFields     = 3;
 /// Верхняя граница на число пар в словаре при разборе. Схема фиксирована, и
 /// принимать словарь на миллион ключей незачем.
 constexpr std::size_t kMaxMapEntries = 32;
+
+bool IsSafeRelativePath(std::string_view path)
+{
+    if (path.empty() || path.front() == '/' || path.find('\\') != std::string_view::npos) {
+        return false;
+    }
+    std::size_t start = 0;
+    while (start <= path.size()) {
+        const std::size_t end = path.find('/', start);
+        const std::string_view part = path.substr(
+            start, end == std::string_view::npos ? path.size() - start : end - start);
+        if (part.empty() || part == "." || part == "..") {
+            return false;
+        }
+        if (end == std::string_view::npos) {
+            break;
+        }
+        start = end + 1;
+    }
+    return true;
+}
 
 bool WriteUint32(std::vector<std::uint8_t>& out, std::uint32_t value)
 {
@@ -51,6 +75,9 @@ void EncodeBody(const ChunkMetadata& m, CborWriter& w)
     w.Text("data");    w.Uint(m.rs_data);
     w.Text("chunks");  w.Uint(m.chunk_count);
     w.Text("parity");  w.Uint(m.rs_parity);
+
+    w.Text("pad");
+    w.Uint(m.padding);
 
     w.Text("file");
     w.MapHeader(kFileFields);
@@ -238,6 +265,14 @@ bool DecodeBody(CborReader& r, ChunkMetadata& m)
             m.version = static_cast<std::uint32_t>(value);
             return true;
         }
+        if (key == "pad") {
+            std::uint64_t value = 0;
+            if (!r.ReadUint(value) || value > 0xFFFFFFFFull) {
+                return false;
+            }
+            m.padding = static_cast<std::uint32_t>(value);
+            return true;
+        }
         if (key == "rs")     { return DecodeMap(r, kRsFields, rs); }
         if (key == "file")   { return DecodeMap(r, kFileFields, file); }
         if (key == "self")   { return DecodeMap(r, kSelfFields, self); }
@@ -261,24 +296,47 @@ bool IsConsistent(const ChunkMetadata& m)
     if (m.rs_data == 0 || m.rs_parity == 0 || m.chunk_count == 0) {
         return false;
     }
-    if (m.rs_data + m.rs_parity > 0xFFFFu) {
+    const std::uint64_t slots = static_cast<std::uint64_t>(m.rs_data)
+                              + static_cast<std::uint64_t>(m.rs_parity);
+    if (slots > 255u) {
         return false;
     }
     if (m.chunk_count > BB_MAX_CHUNKS) {
         return false;
     }
-    if (m.self_position >= m.rs_data + m.rs_parity) {
+    if (m.self_position >= slots) {
         return false;
     }
     // §12: индекс не независимое поле, а функция stripe и position.
     // Расхождение означало бы чанк, чьё имя не соответствует его месту.
-    if (m.self_index != m.self_stripe * (m.rs_data + m.rs_parity) + m.self_position) {
+    const std::uint64_t expected = static_cast<std::uint64_t>(m.self_stripe) * slots
+                                 + static_cast<std::uint64_t>(m.self_position);
+    if (expected > std::numeric_limits<std::uint32_t>::max()
+     || m.self_index != expected) {
+        return false;
+    }
+    std::uint64_t fragment_count = 0;
+    if (!StripeFragmentCount(m.chunk_count, m.rs_data, m.rs_parity, &fragment_count)) {
+        return false;
+    }
+    const std::uint64_t stripe_count = (fragment_count + m.rs_data - 1u) / m.rs_data;
+    if (m.self_stripe >= stripe_count) {
+        return false;
+    }
+    const std::uint64_t first_fragment = static_cast<std::uint64_t>(m.self_stripe) * m.rs_data;
+    const std::uint32_t data_in_stripe = static_cast<std::uint32_t>(
+        std::min<std::uint64_t>(m.rs_data, fragment_count - first_fragment));
+    if (m.self_position < m.rs_data && m.self_position >= data_in_stripe) {
         return false;
     }
     if (!SplitProfileIsValid(m.split)) {
         return false;
     }
-    if (m.file_name.empty() && m.file_size != 0) {
+    if (m.file_name.empty() || m.file_name == "." || m.file_name == ".."
+     || m.file_name.find('/') != std::string::npos
+     || m.file_name.find('\\') != std::string::npos
+     || !Utf8IsValid(m.file_name) || !Utf8IsValid(m.file_path)
+     || !IsSafeRelativePath(m.file_path)) {
         return false;
     }
     return true;

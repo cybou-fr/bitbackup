@@ -242,6 +242,22 @@ BB_TEST(cbor_rejects_lengths_beyond_the_buffer)
     }
 }
 
+BB_TEST(cbor_rejects_invalid_utf8_text)
+{
+    const std::vector<std::vector<std::uint8_t>> cases = {
+        {0x62, 0xC0, 0xAF},             // overlong slash
+        {0x63, 0xED, 0xA0, 0x80},       // surrogate U+D800
+        {0x64, 0xF4, 0x90, 0x80, 0x80}, // beyond U+10FFFF
+        {0x62, 0xE2, 0x82},             // truncated sequence
+        {0x62, 0xC2, 0x20},             // invalid continuation
+    };
+    for (const auto& bytes : cases) {
+        bb::CborReader reader(bytes.data(), bytes.size());
+        std::string_view text;
+        BB_CHECK(!reader.ReadText(text, 16));
+    }
+}
+
 // Порядок ключей — часть канонической формы. Строгое возрастание заодно
 // запрещает дубликаты, а с ними и вопрос, какое из двух значений верное.
 BB_TEST(cbor_enforces_canonical_key_order)
@@ -477,6 +493,28 @@ BB_TEST(metadata_rejects_impossible_parameters)
     too_many.chunk_count = BB_MAX_CHUNKS + 1;
     BB_CHECK_EQ(bb::MetadataEncode(too_many, plaintext), BB_ERR_INVALID_ARG);
 
+    bb::ChunkMetadata oversized_rs = SampleMetadata();
+    oversized_rs.rs_data = 253;
+    oversized_rs.rs_parity = 3;
+    BB_CHECK_EQ(bb::MetadataEncode(oversized_rs, plaintext), BB_ERR_INVALID_ARG);
+
+    bb::ChunkMetadata unreachable_count = SampleMetadata();
+    unreachable_count.chunk_count = 10; // no n satisfies n + ceil(n/8)*3 == 10
+    BB_CHECK_EQ(bb::MetadataEncode(unreachable_count, plaintext), BB_ERR_INVALID_ARG);
+
+    bb::ChunkMetadata missing_data_slot = SampleMetadata();
+    missing_data_slot.chunk_count = 17; // 11 data fragments: final stripe has positions 0..2
+    missing_data_slot.self_stripe = 1;
+    missing_data_slot.self_position = 3;
+    missing_data_slot.self_index = 14;
+    BB_CHECK_EQ(bb::MetadataEncode(missing_data_slot, plaintext), BB_ERR_INVALID_ARG);
+
+    bb::ChunkMetadata nonexistent_stripe = SampleMetadata();
+    nonexistent_stripe.self_stripe = 3;
+    nonexistent_stripe.self_position = 0;
+    nonexistent_stripe.self_index = 33;
+    BB_CHECK_EQ(bb::MetadataEncode(nonexistent_stripe, plaintext), BB_ERR_INVALID_ARG);
+
     bb::ChunkMetadata bad_split = SampleMetadata();
     bad_split.split.min = bad_split.split.max + 1;
     BB_CHECK_EQ(bb::MetadataEncode(bad_split, plaintext), BB_ERR_INVALID_ARG);
@@ -484,6 +522,26 @@ BB_TEST(metadata_rejects_impossible_parameters)
     bb::ChunkMetadata bad_version = SampleMetadata();
     bad_version.version = 2;
     BB_CHECK_EQ(bb::MetadataEncode(bad_version, plaintext), BB_ERR_INVALID_ARG);
+}
+
+BB_TEST(metadata_rejects_unsafe_paths_and_invalid_utf8)
+{
+    const char* unsafe[] = {
+        "../../outside/file", "/root/file", "C:\\Windows\\file",
+        "//server/share", "Documents//file", "Documents/./file",
+        "Documents/../secret"
+    };
+    for (const char* path : unsafe) {
+        bb::ChunkMetadata m = SampleMetadata();
+        m.file_path = path;
+        std::vector<std::uint8_t> plaintext;
+        BB_CHECK_EQ(bb::MetadataEncode(m, plaintext), BB_ERR_INVALID_ARG);
+    }
+
+    bb::ChunkMetadata bad_name = SampleMetadata();
+    bad_name.file_name = std::string("bad\xC0\xAF", 5);
+    std::vector<std::uint8_t> plaintext;
+    BB_CHECK_EQ(bb::MetadataEncode(bad_name, plaintext), BB_ERR_INVALID_ARG);
 }
 
 BB_TEST(metadata_rejects_oversized_fields)

@@ -12,7 +12,55 @@ constexpr std::uint8_t kMajorText  = 3;
 constexpr std::uint8_t kMajorArray = 4;
 constexpr std::uint8_t kMajorMap   = 5;
 
+bool IsValidUtf8Bytes(const std::uint8_t* data, std::size_t size)
+{
+    std::size_t i = 0;
+    while (i < size) {
+        const std::uint8_t lead = data[i++];
+        if (lead <= 0x7F) {
+            continue;
+        }
+
+        std::uint32_t codepoint = 0;
+        std::size_t continuation = 0;
+        if (lead >= 0xC2 && lead <= 0xDF) {
+            codepoint = lead & 0x1Fu;
+            continuation = 1;
+        } else if (lead >= 0xE0 && lead <= 0xEF) {
+            codepoint = lead & 0x0Fu;
+            continuation = 2;
+        } else if (lead >= 0xF0 && lead <= 0xF4) {
+            codepoint = lead & 0x07u;
+            continuation = 3;
+        } else {
+            return false;
+        }
+        if (size - i < continuation) {
+            return false;
+        }
+        for (std::size_t n = 0; n < continuation; ++n) {
+            const std::uint8_t byte = data[i++];
+            if ((byte & 0xC0u) != 0x80u) {
+                return false;
+            }
+            codepoint = (codepoint << 6) | (byte & 0x3Fu);
+        }
+        const std::uint32_t minimum = continuation == 1 ? 0x80u
+                                    : continuation == 2 ? 0x800u : 0x10000u;
+        if (codepoint < minimum || codepoint > 0x10FFFFu
+         || (codepoint >= 0xD800u && codepoint <= 0xDFFFu)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 }  // namespace
+
+bool Utf8IsValid(std::string_view text)
+{
+    return IsValidUtf8Bytes(reinterpret_cast<const std::uint8_t*>(text.data()), text.size());
+}
 
 // ---------------------------------------------------------------------------
 // Писатель
@@ -210,6 +258,10 @@ bool CborReader::ReadText(std::string_view& out, std::size_t max_len)
     // Потолок проверяется до обращения к буферу: длина пришла из недоверенных
     // данных и может быть какой угодно.
     if (length > max_len || length > size_ - offset_) {
+        return false;
+    }
+
+    if (!IsValidUtf8Bytes(data_ + offset_, static_cast<std::size_t>(length))) {
         return false;
     }
 

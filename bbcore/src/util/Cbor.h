@@ -33,6 +33,9 @@
 
 namespace bb {
 
+/// Strict UTF-8: rejects overlong forms, surrogates, invalid continuations and > U+10FFFF.
+bool Utf8IsValid(std::string_view text);
+
 class CborWriter {
 public:
     void Uint(std::uint64_t value);

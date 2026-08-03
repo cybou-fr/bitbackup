@@ -55,7 +55,7 @@ bool Bip39FindWord(std::string_view word, std::uint16_t& out_index);
 bool Bip39FromEntropy(const std::uint8_t* entropy, std::size_t len,
                       std::string& out_mnemonic);
 
-/// Мнемоника из системного CSPRNG. words — 12 или 24.
+/// Новая mnemonic из системного CSPRNG. Политика BitBackup разрешает только 24 слова.
 bool Bip39Generate(unsigned words, std::string& out_mnemonic);
 
 /// Словарь и контрольная сумма. Принимает 12, 15, 18, 21 и 24 слова. Лишние

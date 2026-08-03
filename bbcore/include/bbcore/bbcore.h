@@ -21,7 +21,9 @@
 #include <stdint.h>
 
 #if defined(_WIN32)
-#  if defined(BBCORE_BUILD)
+#  if defined(BBCORE_STATIC)
+#    define BB_API
+#  elif defined(BBCORE_BUILD)
 #    define BB_API __declspec(dllexport)
 #  else
 #    define BB_API __declspec(dllimport)
@@ -113,7 +115,9 @@ typedef struct bb_identity bb_identity;
 
 /**
  * Сгенерировать новую BIP39-мнемонику из системного CSPRNG.
- * words — 12 или 24.
+ * Новые identity всегда используют 24 слова; иное значение отклоняется.
+ * Импорт существующих BIP39 mnemonic через bb_identity_open поддерживает
+ * стандартные длины 12/15/18/21/24 слова.
  */
 BB_API bb_status BB_CALL bb_mnemonic_new(
     unsigned    words,
@@ -380,6 +384,10 @@ BB_API bb_status BB_CALL bb_backup_file(
 /**
  * Сколько байт от начала объекта достаточно прочитать, чтобы получить
  * метаданные без загрузки shard core. Значение верхнее, безопасное.
+ *
+ * Открытого заголовка у чанка нет: в объекте нет ни одного байта открытого
+ * текста (§16). Границы находятся пробным расшифрованием, поэтому «прочитать
+ * заголовок» здесь означает «прочитать префикс и область метаданных».
  */
 BB_API size_t BB_CALL bb_header_probe_size(void);
 
@@ -423,13 +431,22 @@ typedef struct bb_chunk_info {
 } bb_chunk_info;
 
 /**
- * Разобрать префикс контейнера. blob может быть усечён до
- * bb_header_probe_size() байт.
+ * Разобрать чанк. blob может быть усечён до bb_header_probe_size() байт.
+ *
+ * object_name — полное имя объекта "<identity>.<name>.bbk", под которым он
+ * лежит в хранилище. Оно обязательно: имя входит в AAD метаданных (§14), и без
+ * него чанк не вскрыть. У вызывающего оно есть всегда — именно по нему объект
+ * и был получен.
+ *
+ * object_size — полный размер объекта в хранилище. Если blob не усечён, это
+ * blob_len. Нужен, чтобы вычислить длину shard core: открытых длин у чанка нет.
  */
 BB_API bb_status BB_CALL bb_chunk_inspect(
     const bb_identity*  identity,
+    const char*         object_name,
     const uint8_t*      blob,
     size_t              blob_len,
+    uint64_t            object_size,
     bb_chunk_info*      out_info);
 
 /**
@@ -440,8 +457,10 @@ BB_API bb_status BB_CALL bb_chunk_inspect(
  */
 BB_API bb_status BB_CALL bb_chunk_object_names(
     const bb_identity*  identity,
+    const char*         object_name,
     const uint8_t*      blob,
     size_t              blob_len,
+    uint64_t            object_size,
     char*               out_names,
     size_t              out_names_cap,
     uint32_t*           out_count);

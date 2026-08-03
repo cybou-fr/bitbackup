@@ -67,8 +67,7 @@ BB_TEST(bip39_generated_mnemonics_validate_and_differ)
     BB_CHECK(first != second);
 
     std::string twelve;
-    BB_CHECK(bb::Bip39Generate(12, twelve));
-    BB_CHECK(bb::Bip39Validate(twelve));
+    BB_CHECK(!bb::Bip39Generate(12, twelve));
 }
 
 // В ABI объявлены только 12 и 24 слова; всё остальное — ошибка вызывающего,
@@ -78,6 +77,7 @@ BB_TEST(bip39_generate_rejects_unsupported_lengths)
     std::string mnemonic;
     BB_CHECK(!bb::Bip39Generate(0, mnemonic));
     BB_CHECK(!bb::Bip39Generate(11, mnemonic));
+    BB_CHECK(!bb::Bip39Generate(12, mnemonic));
     BB_CHECK(!bb::Bip39Generate(18, mnemonic));   // читать умеем, выдавать нет
     BB_CHECK(!bb::Bip39Generate(25, mnemonic));
 }

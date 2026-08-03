@@ -2,6 +2,22 @@
 
 #include "crypto/Aead.h"
 
+#include <openssl/evp.h>
+
+namespace {
+
+bool PkeyAlgorithmIsAvailable(const char* name)
+{
+    EVP_PKEY_CTX* context = EVP_PKEY_CTX_new_from_name(nullptr, name, nullptr);
+    if (context == nullptr) {
+        return false;
+    }
+    EVP_PKEY_CTX_free(context);
+    return true;
+}
+
+}  // namespace
+
 BB_API const char* BB_CALL bb_status_text(bb_status status)
 {
     switch (status) {
@@ -31,12 +47,11 @@ BB_API const char* BB_CALL bb_version(void)
 
 BB_API bb_status BB_CALL bb_init(void)
 {
-    // Наличие ML-KEM-1024 проверяется на этапе конфигурации сборки
-    // (check_cxx_source_compiles в CMakeLists.txt), а вот AES-256-GCM-SIV
-    // компилируется всегда: он есть в default provider OpenSSL, но не в FIPS
-    // (§30). В FIPS-режиме сборка соберётся и не сможет зашифровать ни байта,
-    // поэтому шифр запрашивается здесь — на старте, а не в первом бэкапе.
-    if (!bb::AeadIsAvailable()) {
+    // Проверяем активные provider'ы в рантайме: компилируемость OpenSSL API
+    // сама по себе не гарантирует доступность нужных алгоритмов в процессе.
+    if (!PkeyAlgorithmIsAvailable("ML-KEM-1024")
+     || !PkeyAlgorithmIsAvailable("X25519")
+     || !bb::AeadIsAvailable()) {
         return BB_ERR_UNSUPPORTED;
     }
 

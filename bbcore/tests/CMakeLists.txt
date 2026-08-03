@@ -23,6 +23,7 @@ add_executable(bbcore_tests
 # Линкуем объекты, а не DLL: тестам нужны внутренние C++ классы, которых нет
 # в экспортируемом C ABI.
 target_link_libraries(bbcore_tests PRIVATE bbcore_objs)
+target_compile_definitions(bbcore_tests PRIVATE BBCORE_STATIC)
 
 target_include_directories(bbcore_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -277,9 +277,11 @@ BB_TEST(abi_mnemonic_new_and_validate)
     BB_CHECK_EQ(bb_mnemonic_new(13, buffer, sizeof buffer, &len), BB_ERR_INVALID_ARG);
 
     // Требуемый размер сообщается, даже когда буфер мал.
+    BB_CHECK_EQ(bb_mnemonic_new(12, buffer, sizeof buffer, &len), BB_ERR_INVALID_ARG);
+
     char small[4] = {};
     len = 0;
-    BB_CHECK_EQ(bb_mnemonic_new(12, small, sizeof small, &len), BB_ERR_BUFFER_TOO_SMALL);
+    BB_CHECK_EQ(bb_mnemonic_new(24, small, sizeof small, &len), BB_ERR_BUFFER_TOO_SMALL);
     BB_CHECK(len > sizeof small);
 
     BB_CHECK_EQ(bb_mnemonic_validate("zoo zoo zoo"), BB_ERR_BAD_MNEMONIC);

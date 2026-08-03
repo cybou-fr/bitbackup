@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(bbcore
     VERSION 0.1.0
@@ -35,6 +35,8 @@ set(BBCORE_SOURCES
     src/api/Status.cpp
     src/api/Names.cpp
     src/api/Identity.cpp
+    src/api/Chunk.cpp
+    src/core/ChunkFormat.cpp
     src/core/KeySchedule.cpp
     src/core/MerkleTree.cpp
     src/core/MetadataCodec.cpp

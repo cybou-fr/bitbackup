@@ -128,17 +128,3 @@ BB_API bb_status BB_CALL bb_object_name_parse(
     }
     return BB_OK;
 }
-
-BB_API size_t BB_CALL bb_header_probe_size(void)
-{
-    // Фиксированная часть до метаданных: public header 48 + ML-KEM ct 1568
-    // + epk 32 + wrapped 80 = 1728 байт. Метаданные дополняются до размерного
-    // класса (4/8/16 KiB, см. ARCHITECTURE.md §13), плюс AEAD tag 16.
-    //
-    // 8 KiB покрывает класс 4 KiB — подавляющее большинство объектов.
-    // Если len_metadata в header указывает на больший класс, вызывающий
-    // делает второй range-запрос.
-    static_assert(1728 + BB_META_CLASS_MIN + BB_TAG_LEN <= 8192,
-                  "probe size must cover header + smallest metadata class");
-    return 8192;
-}
