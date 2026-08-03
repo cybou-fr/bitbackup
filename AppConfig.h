@@ -18,6 +18,7 @@ class TAppConfig
 {
 private:
     TAppConfig();
+    ~TAppConfig();
 public:
     bool HasStorage;
     TStorageConfig Storage;
