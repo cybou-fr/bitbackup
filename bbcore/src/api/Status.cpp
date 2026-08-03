@@ -1,5 +1,7 @@
 #include "bbcore/bbcore.h"
 
+#include "crypto/Aead.h"
+
 BB_API const char* BB_CALL bb_status_text(bb_status status)
 {
     switch (status) {
@@ -29,7 +31,14 @@ BB_API const char* BB_CALL bb_version(void)
 
 BB_API bb_status BB_CALL bb_init(void)
 {
-    // Пока инициализировать нечего. Здесь появится настройка OpenSSL
-    // provider'ов, liboqs и проверка доступности AES-NI.
+    // Наличие ML-KEM-1024 проверяется на этапе конфигурации сборки
+    // (check_cxx_source_compiles в CMakeLists.txt), а вот AES-256-GCM-SIV
+    // компилируется всегда: он есть в default provider OpenSSL, но не в FIPS
+    // (§30). В FIPS-режиме сборка соберётся и не сможет зашифровать ни байта,
+    // поэтому шифр запрашивается здесь — на старте, а не в первом бэкапе.
+    if (!bb::AeadIsAvailable()) {
+        return BB_ERR_UNSUPPORTED;
+    }
+
     return BB_OK;
 }

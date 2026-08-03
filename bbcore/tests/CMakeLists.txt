@@ -1,5 +1,7 @@
 add_executable(bbcore_tests
     main.cpp
+    test_aead.cpp
+    test_aead_vectors.cpp
     test_base32.cpp
     test_bip39.cpp
     test_bip39_vectors.cpp
