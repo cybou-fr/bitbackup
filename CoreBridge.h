@@ -28,6 +28,7 @@ public:
                    std::vector<unsigned char> &sealed);
     bool OpenState(const void *sealed, std::size_t sealedLength,
                    std::vector<unsigned char> &plain);
+    bool IdentityIdText(UnicodeString &identityId);
     void Lock();
     bool IsUnlocked() const { return FIdentity != nullptr; }
     const UnicodeString &LastError() const { return FLastError; }

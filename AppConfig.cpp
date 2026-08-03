@@ -33,13 +33,25 @@ static TCryptUnprotectData UnprotectFunction()
     return reinterpret_cast<TCryptUnprotectData>(GetProcAddress(CryptModule(), "CryptUnprotectData"));
 }
 
-static UnicodeString ConfigPath()
+static UnicodeString ConfigDirectory()
 {
     UnicodeString base = GetEnvironmentVariable(L"LOCALAPPDATA");
     if (base.IsEmpty()) base = ExtractFilePath(ParamStr(0));
     UnicodeString dir = IncludeTrailingPathDelimiter(base) + L"BitBackup";
     ForceDirectories(dir);
-    return IncludeTrailingPathDelimiter(dir) + L"config.dat";
+    return IncludeTrailingPathDelimiter(dir);
+}
+
+static UnicodeString ConfigPath()
+{
+    UnicodeString identityId;
+    if (!TCoreBridge::Instance().IdentityIdText(identityId)) return L"";
+    return ConfigDirectory() + L"config-" + identityId + L".dat";
+}
+
+static UnicodeString LegacyConfigPath()
+{
+    return ConfigDirectory() + L"config.dat";
 }
 
 static void WipeBytes(std::vector<unsigned char> &value)
@@ -175,6 +187,10 @@ bool TAppConfig::Save() const
     WipeBytes(plain);
 
     const UnicodeString path = ConfigPath();
+    if (path.IsEmpty()) {
+        WipeBytes(sealed);
+        return false;
+    }
     const UnicodeString temporary = path + L".tmp";
     HANDLE file = CreateFileW(temporary.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
                               FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH, nullptr);
@@ -197,7 +213,15 @@ bool TAppConfig::Save() const
 bool TAppConfig::Load()
 {
     Clear();
-    HANDLE file = CreateFileW(ConfigPath().c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr,
+    const UnicodeString primaryPath = ConfigPath();
+    if (primaryPath.IsEmpty()) return false;
+    UnicodeString readPath = primaryPath;
+    bool migratedPath = false;
+    if (GetFileAttributesW(readPath.c_str()) == INVALID_FILE_ATTRIBUTES) {
+        readPath = LegacyConfigPath();
+        migratedPath = true;
+    }
+    HANDLE file = CreateFileW(readPath.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr,
                               OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (file == INVALID_HANDLE_VALUE) return false;
     LARGE_INTEGER fileSize = {};
@@ -217,7 +241,7 @@ bool TAppConfig::Load()
     }
 
     const bool identityState = size >= 6 && std::memcmp(encrypted.data(), "bbk1st", 6) == 0;
-    bool migrated = false;
+    bool migrated = migratedPath;
     std::vector<unsigned char> opened;
     if (identityState) {
         if (!TCoreBridge::Instance().OpenState(encrypted.data(), encrypted.size(), opened)) {
@@ -287,9 +311,12 @@ bool TAppConfig::Load()
     HasStorage = parsedStorage;
     if (parsedStorage) Storage = std::move(parsedStorageValue);
     Folders.swap(parsedFolders);
-    if (migrated && !Save()) {
-        Clear();
-        return false;
+    if (migrated) {
+        if (!Save()) {
+            Clear();
+            return false;
+        }
+        if (migratedPath) DeleteFileW(readPath.c_str());
     }
     return true;
 }

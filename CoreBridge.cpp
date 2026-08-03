@@ -13,6 +13,7 @@ typedef bb_status (BB_CALL *TMnemonicNew)(unsigned, char *, size_t, size_t *);
 typedef bb_status (BB_CALL *TMnemonicValidate)(const char *);
 typedef bb_status (BB_CALL *TIdentityOpen)(const char *, const char *, uint32_t, bb_identity **);
 typedef void (BB_CALL *TIdentityFree)(bb_identity *);
+typedef bb_status (BB_CALL *TIdentityIdText)(const bb_identity *, char *, size_t);
 typedef bb_status (BB_CALL *TStateSeal)(const bb_identity *, const uint8_t *, size_t,
                                         uint8_t *, size_t, size_t *);
 typedef bb_status (BB_CALL *TStateOpen)(const bb_identity *, const uint8_t *, size_t,
@@ -25,6 +26,7 @@ struct TApi {
     TMnemonicValidate MnemonicValidate = nullptr;
     TIdentityOpen IdentityOpen = nullptr;
     TIdentityFree IdentityFree = nullptr;
+    TIdentityIdText IdentityIdText = nullptr;
     TStateSeal StateSeal = nullptr;
     TStateOpen StateOpen = nullptr;
 };
@@ -83,6 +85,7 @@ bool TCoreBridge::EnsureLoaded()
      || !Resolve(module, "bb_mnemonic_validate", Api.MnemonicValidate)
      || !Resolve(module, "bb_identity_open", Api.IdentityOpen)
      || !Resolve(module, "bb_identity_free", Api.IdentityFree)
+     || !Resolve(module, "bb_identity_id_text", Api.IdentityIdText)
      || !Resolve(module, "bb_identity_state_seal", Api.StateSeal)
      || !Resolve(module, "bb_identity_state_open", Api.StateOpen)) {
         FreeLibrary(module);
@@ -202,6 +205,25 @@ bool TCoreBridge::OpenState(const void *sealed, std::size_t sealedLength,
         return false;
     }
     plain.resize(needed);
+    FLastError = L"";
+    return true;
+}
+
+bool TCoreBridge::IdentityIdText(UnicodeString &identityId)
+{
+    identityId = L"";
+    if (FIdentity == nullptr || Api.IdentityIdText == nullptr) {
+        FLastError = L"Identity is locked.";
+        return false;
+    }
+    char text[BB_ID_B32_LEN + 1] = {};
+    const bb_status status = Api.IdentityIdText(FIdentity, text, sizeof text);
+    if (status != BB_OK) {
+        FLastError = StatusMessage(status);
+        return false;
+    }
+    identityId = UnicodeString(UTF8String(text));
+    SecureZeroMemory(text, sizeof text);
     FLastError = L"";
     return true;
 }
