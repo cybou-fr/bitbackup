@@ -37,6 +37,7 @@ set(BBCORE_SOURCES
     src/api/Identity.cpp
     src/crypto/Aead.cpp
     src/crypto/Hash.cpp
+    src/crypto/HybridKem.cpp
     src/crypto/Kem.cpp
     src/crypto/Shake.cpp
     src/crypto/X25519.cpp
