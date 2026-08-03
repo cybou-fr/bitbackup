@@ -75,7 +75,7 @@ partially implemented.
 | Hybrid KEM combiner | implemented, golden vectors frozen, **not yet audited** |
 | Splitter, Merkle, CBOR metadata | implemented, tested |
 | Compression (zstd) | not started |
-| Reed–Solomon | not started |
+| Reed–Solomon | implemented, fuzzed over 10 000 stripes |
 | Storage backends | not started |
 | Storage indexing | not started |
 | C++Builder UI | screens exist, core not wired in |

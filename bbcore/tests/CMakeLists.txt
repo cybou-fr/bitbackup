@@ -12,6 +12,7 @@ add_executable(bbcore_tests
     test_merkle.cpp
     test_metadata.cpp
     test_object_name.cpp
+    test_reed_solomon.cpp
     test_splitter.cpp
     test_stripe_builder.cpp
     test_kem.cpp

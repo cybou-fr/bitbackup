@@ -47,6 +47,8 @@ set(BBCORE_SOURCES
     src/crypto/Shake.cpp
     src/crypto/X25519.cpp
     src/identity/Identity.cpp
+    src/redundancy/Gf256.cpp
+    src/redundancy/ReedSolomon.cpp
     src/util/Base32.cpp
     src/util/Bip39.cpp
     src/util/Bip39Wordlist.cpp
