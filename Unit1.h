@@ -42,6 +42,8 @@ private:
     TUnlockFrame *FUnlockFrame;
     TSetupFrame *FSetupFrame;
     TOverviewFrame *FOverviewFrame;
+    bool FUnlocked;
+    void __fastcall HandleUnlocked(TObject *Sender);
     void ShowFrame(TFrame *frame);
     void SelectNavigation(TRectangle *selected);
     void UpdateResponsiveLayout();

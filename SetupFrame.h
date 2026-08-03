@@ -46,6 +46,8 @@ private:
     void UpdateReadyState();
 public:
     __fastcall TSetupFrame(TComponent *Owner);
+    void LoadConfiguration();
+    void ClearConfiguration();
     __property TNotifyEvent OnSetupComplete = {read=FOnSetupComplete, write=FOnSetupComplete};
 };
 

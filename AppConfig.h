@@ -25,6 +25,7 @@ public:
     static TAppConfig &Instance();
     bool Load();
     bool Save() const;
+    void Clear();
 };
 
 #endif

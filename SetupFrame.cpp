@@ -12,8 +12,13 @@
 __fastcall TSetupFrame::TSetupFrame(TComponent *Owner)
     : TFrame(Owner), FStorageConfigured(false), FFolderConfigured(false), FFolderCount(0)
 {
+    UpdateReadyState();
+}
+
+void TSetupFrame::LoadConfiguration()
+{
+    ClearConfiguration();
     TAppConfig &config = TAppConfig::Instance();
-    config.Load();
     if (config.HasStorage) {
         FStorageConfigured = true;
         StorageValue->Text = config.Storage.Name + L" - " + config.Storage.Type + L" - " + config.Storage.Location;
@@ -35,6 +40,19 @@ __fastcall TSetupFrame::TSetupFrame(TComponent *Owner)
     UpdateReadyState();
 }
 
+void TSetupFrame::ClearConfiguration()
+{
+    SourcesList->Clear();
+    FStorageConfigured = false;
+    FFolderConfigured = false;
+    FFolderCount = 0;
+    StorageValue->Text = L"Not configured";
+    SourcesValue->Text = L"No folders configured";
+    StorageButtonLabel->Text = L"Configure";
+    SourcesButtonLabel->Text = L"Add folder";
+    UpdateReadyState();
+}
+
 void __fastcall TSetupFrame::AddStorageClick(TObject *Sender)
 {
     TStorageDialogForm *dialog = new TStorageDialogForm(this);
@@ -49,7 +67,8 @@ void __fastcall TSetupFrame::AddStorageClick(TObject *Sender)
             config.HasStorage = true;
             config.Storage = {dialog->StorageType(), dialog->DisplayName(), dialog->Location(),
                               dialog->User(), dialog->Secret()};
-            config.Save();
+            if (!config.Save())
+                ShowMessage(L"Configuration could not be saved. Check access to the local app-data folder.");
             UpdateReadyState();
         }
     }
@@ -76,7 +95,8 @@ void __fastcall TSetupFrame::AddFolderClick(TObject *Sender)
         SourcesButtonLabel->Text = L"Add another";
         TAppConfig &config = TAppConfig::Instance();
         config.Folders.push_back({directory, rootLabel});
-        config.Save();
+        if (!config.Save())
+            ShowMessage(L"Configuration could not be saved. Check access to the local app-data folder.");
         UpdateReadyState();
     }
 }

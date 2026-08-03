@@ -5,12 +5,13 @@
 #include "UnlockFrame.h"
 #include "SetupFrame.h"
 #include "OverviewFrame.h"
+#include "AppConfig.h"
 
 #pragma package(smart_init)
 #pragma resource "*.fmx"
 TForm1 *Form1;
 
-__fastcall TForm1::TForm1(TComponent* Owner) : TForm(Owner)
+__fastcall TForm1::TForm1(TComponent* Owner) : TForm(Owner), FUnlocked(false)
 {
 }
 
@@ -28,11 +29,19 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
     FOverviewFrame->Parent = ContentHost;
     FOverviewFrame->Align = TAlignLayout::Client;
 
-    FUnlockFrame->OnUnlocked = NavSetupClick;
+    FUnlockFrame->OnUnlocked = HandleUnlocked;
     FSetupFrame->OnSetupComplete = NavOverviewClick;
     ShowFrame(FUnlockFrame);
     SelectNavigation(nullptr);
     UpdateResponsiveLayout();
+}
+
+void __fastcall TForm1::HandleUnlocked(TObject *Sender)
+{
+    FUnlocked = true;
+    TAppConfig::Instance().Load();
+    FSetupFrame->LoadConfiguration();
+    NavSetupClick(Sender);
 }
 
 void TForm1::ShowFrame(TFrame *frame)
@@ -52,6 +61,10 @@ void TForm1::SelectNavigation(TRectangle *selected)
 
 void __fastcall TForm1::NavOverviewClick(TObject *Sender)
 {
+    if (!FUnlocked) {
+        ShowFrame(FUnlockFrame);
+        return;
+    }
     ShowFrame(FOverviewFrame);
     SelectNavigation(NavOverview);
     SessionStatusLabel->Text = L"●  Identity unlocked     |     Configuration ready";
@@ -59,6 +72,10 @@ void __fastcall TForm1::NavOverviewClick(TObject *Sender)
 
 void __fastcall TForm1::NavSetupClick(TObject *Sender)
 {
+    if (!FUnlocked) {
+        ShowFrame(FUnlockFrame);
+        return;
+    }
     ShowFrame(FSetupFrame);
     SelectNavigation(NavSetup);
     SessionStatusLabel->Text = L"●  Identity unlocked     |     Setup required";
@@ -66,6 +83,9 @@ void __fastcall TForm1::NavSetupClick(TObject *Sender)
 
 void __fastcall TForm1::NavLockedClick(TObject *Sender)
 {
+    FUnlocked = false;
+    TAppConfig::Instance().Clear();
+    FSetupFrame->ClearConfiguration();
     ShowFrame(FUnlockFrame);
     SelectNavigation(nullptr);
     SessionStatusLabel->Text = L"●  Locked     |     Mnemonic required";
