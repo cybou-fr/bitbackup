@@ -35,6 +35,7 @@ set(BBCORE_SOURCES
     src/api/Status.cpp
     src/api/Names.cpp
     src/api/Identity.cpp
+    src/api/State.cpp
     src/api/Chunk.cpp
     src/core/ChunkFormat.cpp
     src/core/KeySchedule.cpp

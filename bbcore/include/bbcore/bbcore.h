@@ -170,6 +170,29 @@ BB_API bb_status BB_CALL bb_identity_export_public(
 /** true, если identity содержит приватные ключи. */
 BB_API int BB_CALL bb_identity_has_private(const bb_identity* identity);
 
+/**
+ * Зашифровать локальное состояние ключом текущей private identity.
+ * Формат state отделён от .bbk и включает случайный nonce и identity_id.
+ * При out == NULL возвращает требуемый размер через out_len и
+ * BB_ERR_BUFFER_TOO_SMALL.
+ */
+BB_API bb_status BB_CALL bb_identity_state_seal(
+    const bb_identity* identity,
+    const uint8_t*     plain,
+    size_t             plain_len,
+    uint8_t*           out,
+    size_t             cap,
+    size_t*            out_len);
+
+/** Расшифровать локальное состояние; authentication failure не выдаёт plaintext. */
+BB_API bb_status BB_CALL bb_identity_state_open(
+    const bb_identity* identity,
+    const uint8_t*     sealed,
+    size_t             sealed_len,
+    uint8_t*           out,
+    size_t             cap,
+    size_t*            out_len);
+
 /* ------------------------------------------------------------------ */
 /* Storage backend — реализуется вызывающей стороной                   */
 /* ------------------------------------------------------------------ */
