@@ -2,9 +2,14 @@ add_executable(bbcore_tests
     main.cpp
     test_base32.cpp
     test_object_name.cpp
+    test_kem.cpp
+    test_shake.cpp
+    test_x25519.cpp
 )
 
-target_link_libraries(bbcore_tests PRIVATE bbcore)
+# Линкуем объекты, а не DLL: тестам нужны внутренние C++ классы, которых нет
+# в экспортируемом C ABI.
+target_link_libraries(bbcore_tests PRIVATE bbcore_objs)
 
 target_include_directories(bbcore_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -15,10 +20,3 @@ else()
 endif()
 
 add_test(NAME bbcore_tests COMMAND bbcore_tests)
-
-# DLL должна лежать рядом с тестовым бинарником на Windows.
-if(WIN32 AND BBCORE_SHARED)
-    add_custom_command(TARGET bbcore_tests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                $<TARGET_FILE:bbcore> $<TARGET_FILE_DIR:bbcore_tests>)
-endif()

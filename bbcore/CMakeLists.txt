@@ -34,41 +34,56 @@ endif()
 set(BBCORE_SOURCES
     src/api/Status.cpp
     src/api/Names.cpp
+    src/crypto/Kem.cpp
+    src/crypto/Shake.cpp
+    src/crypto/X25519.cpp
     src/util/Base32.cpp
     src/util/SecureMemory.cpp
 )
 
+# Объектная библиотека, а не прямая сборка в SHARED: у DLL скрыта видимость и
+# наружу торчит только C ABI, поэтому тесты не смогли бы дотянуться до
+# внутренних C++ классов вроде bb::MlKemKeyPair. Тесты линкуют объекты
+# напрямую, релизная DLL собирается из тех же объектов.
+add_library(bbcore_objs OBJECT ${BBCORE_SOURCES})
+
+target_compile_definitions(bbcore_objs PRIVATE BBCORE_BUILD)
+
+target_include_directories(bbcore_objs
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 if(BBCORE_SHARED)
-    add_library(bbcore SHARED ${BBCORE_SOURCES})
+    add_library(bbcore SHARED)
 else()
-    add_library(bbcore STATIC ${BBCORE_SOURCES})
+    add_library(bbcore STATIC)
     target_compile_definitions(bbcore PUBLIC BBCORE_STATIC)
 endif()
 
 add_library(bbcore::bbcore ALIAS bbcore)
 
-target_compile_definitions(bbcore PRIVATE BBCORE_BUILD)
+target_link_libraries(bbcore PRIVATE bbcore_objs)
 
 target_include_directories(bbcore
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src)
+        $<INSTALL_INTERFACE:include>)
 
 set_target_properties(bbcore PROPERTIES
     VERSION   ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    OUTPUT_NAME bbcore)
+    OUTPUT_NAME bbcore
+    LINKER_LANGUAGE CXX)
 
 # ---------------------------------------------------------------------------
 # Предупреждения
 # ---------------------------------------------------------------------------
 
 if(MSVC)
-    target_compile_options(bbcore PRIVATE /W4 /permissive-)
+    target_compile_options(bbcore_objs PRIVATE /W4 /permissive-)
 else()
-    target_compile_options(bbcore PRIVATE
+    target_compile_options(bbcore_objs PRIVATE
         -Wall -Wextra -Wpedantic
         -Wconversion -Wsign-conversion
         -Wshadow -Wcast-qual)
@@ -77,25 +92,46 @@ endif()
 # ---------------------------------------------------------------------------
 # Зависимости
 #
-# Пока не подключены. Порядок добавления по мере реализации модулей:
-#   OpenSSL >= 3.5  ML-KEM-1024, ML-DSA-87, X25519, SHAKE256, AES-256-GCM-SIV
-#   BLAKE3          https://github.com/BLAKE3-team/BLAKE3  (c/)
-#   zstd            потоковое сжатие
-#   Reed-Solomon    собственная реализация над GF(2^8), матрица Коши
+# Версии пинятся в vcpkg.json, сборка идёт через пресеты из
+# CMakePresets.json — им нужна переменная окружения VCPKG_ROOT.
 #
-# liboqs намеренно не берём: OpenSSL 3.5 даёт ML-KEM и ML-DSA штатно, включая
-# детерминированную генерацию ключей из seed (64 байта для ML-KEM, 32 для ML-DSA),
-# что и нужно для вывода identity из мнемоники.
+# OpenSSL >= 3.5 закрывает весь криптографический набор bbk/1:
+#   ML-KEM-1024, ML-DSA-87, X25519, SHAKE256, AES-256-GCM-SIV.
 #
-# AES-256-GCM-SIV есть только в default provider OpenSSL, но не в FIPS provider,
-# поэтому полный FIPS mode продукт не заявляет. См. docs/ARCHITECTURE.md §30.
+# liboqs намеренно не берём: OpenSSL даёт ML-KEM и ML-DSA штатно, включая
+# детерминированную генерацию ключей из seed (64 байта для ML-KEM, 32 для
+# ML-DSA), что и нужно для вывода identity из мнемоники.
 #
-# Подключать через FetchContent с зафиксированными тегами и хешами:
-# ни одна зависимость не тянется из системы, чтобы сборка была
-# воспроизводимой на машине разработчика и в CI.
+# AES-256-GCM-SIV есть только в default provider OpenSSL, но не в FIPS
+# provider, поэтому полный FIPS mode продукт не заявляет. См. §30.
+#
+# Ещё предстоит добавить: BLAKE3 и zstd. Reed-Solomon пишется свой.
 # ---------------------------------------------------------------------------
 
-# include(cmake/Dependencies.cmake)
+find_package(OpenSSL 3.5 REQUIRED)
+
+# PUBLIC на объектной библиотеке: и DLL, и тесты линкуются с одним OpenSSL.
+target_link_libraries(bbcore_objs PUBLIC OpenSSL::Crypto)
+
+# Проверяем не только версию, но и наличие самого алгоритма: собраться с
+# OpenSSL без ML-KEM и узнать об этом в рантайме — худший из вариантов.
+include(CheckCXXSourceCompiles)
+set(CMAKE_REQUIRED_LIBRARIES OpenSSL::Crypto)
+check_cxx_source_compiles("
+    #include <openssl/evp.h>
+    int main() {
+        EVP_PKEY_CTX* c = EVP_PKEY_CTX_new_from_name(0, \"ML-KEM-1024\", 0);
+        return c ? 0 : 1;
+    }" BBCORE_HAVE_MLKEM)
+unset(CMAKE_REQUIRED_LIBRARIES)
+
+if(NOT BBCORE_HAVE_MLKEM)
+    message(FATAL_ERROR
+        "OpenSSL ${OPENSSL_VERSION} does not expose ML-KEM-1024. "
+        "bbk/1 requires it; build against OpenSSL 3.5 or newer.")
+endif()
+
+message(STATUS "bbcore: OpenSSL ${OPENSSL_VERSION}, ML-KEM-1024 available")
 
 # ---------------------------------------------------------------------------
 # Тесты

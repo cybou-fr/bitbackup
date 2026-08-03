@@ -65,8 +65,13 @@ partially implemented.
 | Format specification | done |
 | Library C ABI | declared |
 | base32, object names | implemented, tested |
+| SHAKE256 (KDF/XOF) | implemented, tested against FIPS 202 vectors |
+| ML-KEM-1024 | implemented, deterministic keygen from seed verified |
+| X25519 | implemented, tested against RFC 7748 vectors |
 | Identity derivation, BIP39 | not started |
-| Hybrid KEM, AEAD | not started |
+| Hybrid KEM combiner | not started |
+| AES-256-GCM-SIV | not started |
+| BLAKE3 | not started |
 | Splitter, Merkle, CBOR | not started |
 | Reed–Solomon | not started |
 | Storage backends | not started |
@@ -85,11 +90,15 @@ MSVC/clang and CMake. The UI loads the resulting DLL through the C ABI.
 
 ## Building the core
 
-Requires CMake 3.20+ and a C++17 compiler.
+Requires CMake 3.21+, a C++17 compiler, and [vcpkg](https://github.com/microsoft/vcpkg)
+with `VCPKG_ROOT` set. Dependencies are pinned in `bbcore/vcpkg.json`; the first configure
+builds OpenSSL from source and takes several minutes.
 
 ```bash
-cmake -S bbcore -B build && cmake --build build --config Release && ctest --test-dir build -C Release
+cd bbcore && cmake --preset windows && cmake --build --preset windows && ctest --preset windows
 ```
+
+Use the `linux` or `macos` preset on those platforms.
 
 So far the build has only been exercised with MSVC on Windows. The POSIX paths are
 straightforward but untested; reports of breakage on Linux or macOS are welcome.
