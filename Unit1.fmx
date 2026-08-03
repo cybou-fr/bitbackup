@@ -1,4 +1,4 @@
-object Form1: TForm1
+﻿object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'BitBackup'
@@ -22,6 +22,7 @@ object Form1: TForm1
       Position.Y = 24.000000000000000000
       Size.Width = 160.000000000000000000
       Size.Height = 28.000000000000000000
+      StyledSettings = []
       Text = 'BitBackup'
       TextSettings.Font.Size = 18.000000000000000000
       TextSettings.FontColor = xFFF3F6FB
@@ -31,6 +32,7 @@ object Form1: TForm1
       Position.Y = 52.000000000000000000
       Size.Width = 165.000000000000000000
       Size.Height = 22.000000000000000000
+      StyledSettings = []
       Text = 'Private backup workspace'
       TextSettings.Font.Size = 10.000000000000000000
       TextSettings.FontColor = xFF657188
@@ -48,6 +50,7 @@ object Form1: TForm1
       object NavOverviewLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Overview'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -68,6 +71,7 @@ object Form1: TForm1
       object NavSetupLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Setup'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -88,6 +92,7 @@ object Form1: TForm1
       object NavIdentityLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Identity'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -108,6 +113,7 @@ object Form1: TForm1
       object NavStorageLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Storage'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -128,6 +134,7 @@ object Form1: TForm1
       object NavSourcesLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Backup folders'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -148,6 +155,7 @@ object Form1: TForm1
       object NavRestoreLabel: TLabel
         Align = Client
         Margins.Left = 18.000000000000000000
+        StyledSettings = []
         Text = 'Lock / Restore'
         HitTest = False
         TextSettings.Font.Size = 13.000000000000000000
@@ -165,7 +173,8 @@ object Form1: TForm1
     object SessionStatusLabel: TLabel
       Align = Client
       Margins.Left = 28.000000000000000000
-      Text = '●  Locked     |     Mnemonic required'
+      StyledSettings = []
+      Text = 'Locked     |     Mnemonic required'
       TextSettings.Font.Size = 12.000000000000000000
       TextSettings.FontColor = xFF5CDB9B
       TextSettings.VertAlign = Center
@@ -175,3 +184,4 @@ object Form1: TForm1
     Align = Client
   end
 end
+

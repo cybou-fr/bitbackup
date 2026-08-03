@@ -2,6 +2,8 @@
 # Internal design docs — not published
 # ---------------------------------------------------------------------------
 docs/
+design-qa.md
+*.png
 
 # ---------------------------------------------------------------------------
 # Secrets / credentials — NEVER commit

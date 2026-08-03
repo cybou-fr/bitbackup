@@ -1,0 +1,203 @@
+object StorageDialogForm: TStorageDialogForm
+  Left = 0
+  Top = 0
+  BorderStyle = Sizeable
+  Caption = 'Configure storage'
+  ClientHeight = 560
+  ClientWidth = 620
+  Constraints.MinHeight = 520.000000000000000000
+  Constraints.MinWidth = 560.000000000000000000
+  Fill.Color = xFF090D14
+  FormFactor.Width = 620
+  FormFactor.Height = 560
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Background: TRectangle
+    Align = Client
+    Fill.Color = xFF090D14
+    Stroke.Kind = None
+    object TitleLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 28.000000000000000000
+      Size.Width = 540.000000000000000000
+      Size.Height = 42.000000000000000000
+      StyledSettings = []
+      Text = 'Add storage destination'
+      TextSettings.Font.Size = 24.000000000000000000
+      TextSettings.FontColor = xFFF3F6FB
+    end
+    object DescriptionLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 72.000000000000000000
+      Size.Width = 540.000000000000000000
+      Size.Height = 36.000000000000000000
+      StyledSettings = []
+      Text = 'Choose where encrypted BitBackup objects will be stored.'
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF98A4B7
+    end
+    object TypeLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 122.000000000000000000
+      Size.Width = 180.000000000000000000
+      Size.Height = 22.000000000000000000
+      StyledSettings = []
+      Text = 'Storage type'
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF98A4B7
+    end
+    object StorageTypeCombo: TComboBox
+      Position.X = 34.000000000000000000
+      Position.Y = 148.000000000000000000
+      Size.Width = 552.000000000000000000
+      Size.Height = 42.000000000000000000
+      ItemIndex = 0
+      OnChange = StorageTypeChange
+      object LocalItem: TListBoxItem
+        Text = 'Local folder / USB'
+      end
+      object S3Item: TListBoxItem
+        Text = 'S3-compatible'
+      end
+      object SftpItem: TListBoxItem
+        Text = 'SFTP'
+      end
+      object FtpItem: TListBoxItem
+        Text = 'FTP / FTPS'
+      end
+    end
+    object NameLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 206.000000000000000000
+      Size.Width = 180.000000000000000000
+      Size.Height = 22.000000000000000000
+      StyledSettings = []
+      Text = 'Display name'
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF98A4B7
+    end
+    object DisplayNameEdit: TEdit
+      Position.X = 34.000000000000000000
+      Position.Y = 232.000000000000000000
+      Size.Width = 552.000000000000000000
+      Size.Height = 42.000000000000000000
+      TextPrompt = 'My local vault'
+    end
+    object LocationLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 290.000000000000000000
+      Size.Width = 220.000000000000000000
+      Size.Height = 22.000000000000000000
+      StyledSettings = []
+      Text = 'Vault folder'
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF98A4B7
+    end
+    object LocationEdit: TEdit
+      Position.X = 34.000000000000000000
+      Position.Y = 316.000000000000000000
+      Size.Width = 420.000000000000000000
+      Size.Height = 42.000000000000000000
+      TextPrompt = 'Choose a local folder or USB drive'
+    end
+    object BrowseButton: TRectangle
+      Position.X = 466.000000000000000000
+      Position.Y = 316.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 42.000000000000000000
+      XRadius = 8.000000000000000000
+      YRadius = 8.000000000000000000
+      Fill.Color = xFF1A2740
+      Stroke.Color = xFF34415A
+      OnClick = BrowseClick
+      object BrowseButtonLabel: TLabel
+        Align = Client
+        StyledSettings = []
+        Text = 'Browse...'
+        HitTest = False
+        TextSettings.Font.Size = 12.000000000000000000
+        TextSettings.FontColor = xFFF3F6FB
+        TextSettings.HorzAlign = Center
+        TextSettings.VertAlign = Center
+      end
+    end
+    object CredentialsLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 374.000000000000000000
+      Size.Width = 180.000000000000000000
+      Size.Height = 22.000000000000000000
+      StyledSettings = []
+      Text = 'Credentials'
+      TextSettings.Font.Size = 11.000000000000000000
+      TextSettings.FontColor = xFF98A4B7
+    end
+    object UserEdit: TEdit
+      Position.X = 34.000000000000000000
+      Position.Y = 400.000000000000000000
+      Size.Width = 266.000000000000000000
+      Size.Height = 42.000000000000000000
+      TextPrompt = 'User / access key'
+    end
+    object SecretEdit: TEdit
+      Position.X = 320.000000000000000000
+      Position.Y = 400.000000000000000000
+      Size.Width = 266.000000000000000000
+      Size.Height = 42.000000000000000000
+      Password = True
+      TextPrompt = 'Password / secret key'
+    end
+    object HintLabel: TLabel
+      Position.X = 34.000000000000000000
+      Position.Y = 456.000000000000000000
+      Size.Width = 552.000000000000000000
+      Size.Height = 30.000000000000000000
+      StyledSettings = []
+      Text = 'The folder will contain encrypted .bbk objects only.'
+      TextSettings.Font.Size = 10.000000000000000000
+      TextSettings.FontColor = xFF657188
+    end
+    object CancelButton: TRectangle
+      Position.X = 330.000000000000000000
+      Position.Y = 496.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 44.000000000000000000
+      XRadius = 8.000000000000000000
+      YRadius = 8.000000000000000000
+      Fill.Color = xFF111A27
+      Stroke.Color = xFF243044
+      OnClick = CancelClick
+      object CancelButtonLabel: TLabel
+        Align = Client
+        StyledSettings = []
+        Text = 'Cancel'
+        HitTest = False
+        TextSettings.Font.Size = 12.000000000000000000
+        TextSettings.FontColor = xFFF3F6FB
+        TextSettings.HorzAlign = Center
+        TextSettings.VertAlign = Center
+      end
+    end
+    object SaveButton: TRectangle
+      Position.X = 466.000000000000000000
+      Position.Y = 496.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 44.000000000000000000
+      XRadius = 8.000000000000000000
+      YRadius = 8.000000000000000000
+      Fill.Color = xFF6675F5
+      Stroke.Kind = None
+      OnClick = SaveClick
+      object SaveButtonLabel: TLabel
+        Align = Client
+        StyledSettings = []
+        Text = 'Save storage'
+        HitTest = False
+        TextSettings.Font.Size = 12.000000000000000000
+        TextSettings.FontColor = xFFF3F6FB
+        TextSettings.HorzAlign = Center
+        TextSettings.VertAlign = Center
+      end
+    end
+  end
+end

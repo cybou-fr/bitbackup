@@ -1,4 +1,4 @@
-object OverviewFrame: TOverviewFrame
+﻿object OverviewFrame: TOverviewFrame
   Size.Width = 790.000000000000000000
   Size.Height = 603.000000000000000000
   Size.PlatformDefault = False
@@ -17,6 +17,7 @@ object OverviewFrame: TOverviewFrame
           Position.Y = 28.000000000000000000
           Size.Width = 520.000000000000000000
           Size.Height = 44.000000000000000000
+          StyledSettings = []
           Text = 'Backup workspace'
           TextSettings.Font.Size = 27.000000000000000000
           TextSettings.FontColor = xFFF3F6FB
@@ -26,6 +27,7 @@ object OverviewFrame: TOverviewFrame
           Position.Y = 72.000000000000000000
           Size.Width = 560.000000000000000000
           Size.Height = 38.000000000000000000
+          StyledSettings = []
           Text = 'Your identity, storage index and configured folders are ready.'
           TextSettings.Font.Size = 12.000000000000000000
           TextSettings.FontColor = xFF98A4B7
@@ -42,6 +44,7 @@ object OverviewFrame: TOverviewFrame
           OnClick = RunBackupClick
           object RunButtonLabel: TLabel
             Align = Client
+            StyledSettings = []
             Text = 'Run backup'
             HitTest = False
             TextSettings.Font.Size = 13.000000000000000000
@@ -64,6 +67,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 18.000000000000000000
             Size.Width = 180.000000000000000000
             Size.Height = 26.000000000000000000
+            StyledSettings = []
             Text = 'Identity'
             TextSettings.Font.Size = 14.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -73,6 +77,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 55.000000000000000000
             Size.Width = 185.000000000000000000
             Size.Height = 36.000000000000000000
+            StyledSettings = []
             Text = 'Identity #0'#13#10'Unlocked'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF5CDB9B
@@ -92,6 +97,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 18.000000000000000000
             Size.Width = 180.000000000000000000
             Size.Height = 26.000000000000000000
+            StyledSettings = []
             Text = 'Storage'
             TextSettings.Font.Size = 14.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -101,6 +107,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 55.000000000000000000
             Size.Width = 185.000000000000000000
             Size.Height = 36.000000000000000000
+            StyledSettings = []
             Text = '1 destination'#13#10'Index ready'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF5CDB9B
@@ -120,6 +127,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 18.000000000000000000
             Size.Width = 190.000000000000000000
             Size.Height = 26.000000000000000000
+            StyledSettings = []
             Text = 'Backup folders'
             TextSettings.Font.Size = 14.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -129,6 +137,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 55.000000000000000000
             Size.Width = 195.000000000000000000
             Size.Height = 36.000000000000000000
+            StyledSettings = []
             Text = '1 folder enabled'#13#10'Ready'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF5CDB9B
@@ -139,6 +148,7 @@ object OverviewFrame: TOverviewFrame
           Position.Y = 282.000000000000000000
           Size.Width = 500.000000000000000000
           Size.Height = 34.000000000000000000
+          StyledSettings = []
           Text = 'Folders to protect'
           TextSettings.Font.Size = 17.000000000000000000
           TextSettings.FontColor = xFFF3F6FB
@@ -157,7 +167,8 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 16.000000000000000000
             Size.Width = 360.000000000000000000
             Size.Height = 26.000000000000000000
-            Text = 'Documents · Personal'
+            StyledSettings = []
+            Text = 'Documents - Personal'
             TextSettings.Font.Size = 14.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
           end
@@ -166,7 +177,8 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 50.000000000000000000
             Size.Width = 480.000000000000000000
             Size.Height = 24.000000000000000000
-            Text = 'C:\Users\Alex\Documents  →  Local vault'
+            StyledSettings = []
+            Text = 'C:\Users\Alex\Documents  ->  Local vault'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF98A4B7
           end
@@ -175,6 +187,7 @@ object OverviewFrame: TOverviewFrame
             Position.Y = 32.000000000000000000
             Size.Width = 105.000000000000000000
             Size.Height = 26.000000000000000000
+            StyledSettings = []
             Text = 'Ready'
             TextSettings.Font.Size = 12.000000000000000000
             TextSettings.FontColor = xFF5CDB9B
@@ -185,3 +198,4 @@ object OverviewFrame: TOverviewFrame
     end
   end
 end
+

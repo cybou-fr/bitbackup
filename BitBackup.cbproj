@@ -217,6 +217,13 @@
             <BuildOrder>5</BuildOrder>
         </CppCompile>
         <FormResources Include="ui\OverviewFrame.fmx"/>
+        <CppCompile Include="ui\StorageDialog.cpp">
+            <Form>StorageDialogForm</Form>
+            <FormType>fmx</FormType>
+            <DependentOn>StorageDialog.h</DependentOn>
+            <BuildOrder>6</BuildOrder>
+        </CppCompile>
+        <FormResources Include="ui\StorageDialog.fmx"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

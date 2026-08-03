@@ -6,6 +6,7 @@
 #include <FMX.Layouts.hpp>
 #include <FMX.Objects.hpp>
 #include <FMX.StdCtrls.hpp>
+#include <FMX.ListBox.hpp>
 
 class TSetupFrame : public TFrame
 {
@@ -29,6 +30,7 @@ __published:
     TLabel *SourcesStep;
     TLabel *SourcesTitle;
     TLabel *SourcesValue;
+    TListBox *SourcesList;
     TRectangle *SourcesButton;
     TLabel *SourcesButtonLabel;
     TRectangle *FinishButton;
@@ -40,6 +42,7 @@ private:
     TNotifyEvent FOnSetupComplete;
     bool FStorageConfigured;
     bool FFolderConfigured;
+    int FFolderCount;
     void UpdateReadyState();
 public:
     __fastcall TSetupFrame(TComponent *Owner);

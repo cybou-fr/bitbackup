@@ -1,4 +1,4 @@
-object SetupFrame: TSetupFrame
+﻿object SetupFrame: TSetupFrame
   Size.Width = 790.000000000000000000
   Size.Height = 603.000000000000000000
   Size.PlatformDefault = False
@@ -11,12 +11,13 @@ object SetupFrame: TSetupFrame
       ShowScrollBars = True
       object Canvas: TLayout
         Align = Top
-        Height = 680.000000000000000000
+        Height = 730.000000000000000000
         object TitleLabel: TLabel
           Position.X = 42.000000000000000000
           Position.Y = 28.000000000000000000
           Size.Width = 650.000000000000000000
           Size.Height = 44.000000000000000000
+          StyledSettings = []
           Text = 'Configure this device'
           TextSettings.Font.Size = 27.000000000000000000
           TextSettings.FontColor = xFFF3F6FB
@@ -26,6 +27,7 @@ object SetupFrame: TSetupFrame
           Position.Y = 72.000000000000000000
           Size.Width = 680.000000000000000000
           Size.Height = 38.000000000000000000
+          StyledSettings = []
           Text = 'Connect storage and choose the folders BitBackup should protect.'
           TextSettings.Font.Size = 12.000000000000000000
           TextSettings.FontColor = xFF98A4B7
@@ -44,7 +46,8 @@ object SetupFrame: TSetupFrame
             Position.Y = 16.000000000000000000
             Size.Width = 72.000000000000000000
             Size.Height = 22.000000000000000000
-            Text = '01 · IDENTITY'
+            StyledSettings = []
+            Text = '01 - IDENTITY'
             TextSettings.Font.Size = 9.000000000000000000
             TextSettings.FontColor = xFF6675F5
           end
@@ -53,6 +56,7 @@ object SetupFrame: TSetupFrame
             Position.Y = 42.000000000000000000
             Size.Width = 420.000000000000000000
             Size.Height = 28.000000000000000000
+            StyledSettings = []
             Text = 'Active identity'
             TextSettings.Font.Size = 16.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -62,7 +66,8 @@ object SetupFrame: TSetupFrame
             Position.Y = 74.000000000000000000
             Size.Width = 640.000000000000000000
             Size.Height = 24.000000000000000000
-            Text = 'Identity #0 · unlocked for this session'
+            StyledSettings = []
+            Text = 'Identity #0 - unlocked for this session'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF5CDB9B
           end
@@ -81,7 +86,8 @@ object SetupFrame: TSetupFrame
             Position.Y = 16.000000000000000000
             Size.Width = 82.000000000000000000
             Size.Height = 22.000000000000000000
-            Text = '02 · STORAGE'
+            StyledSettings = []
+            Text = '02 - STORAGE'
             TextSettings.Font.Size = 9.000000000000000000
             TextSettings.FontColor = xFF6675F5
           end
@@ -90,6 +96,7 @@ object SetupFrame: TSetupFrame
             Position.Y = 42.000000000000000000
             Size.Width = 420.000000000000000000
             Size.Height = 28.000000000000000000
+            StyledSettings = []
             Text = 'Storage destinations'
             TextSettings.Font.Size = 16.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -99,6 +106,7 @@ object SetupFrame: TSetupFrame
             Position.Y = 76.000000000000000000
             Size.Width = 430.000000000000000000
             Size.Height = 24.000000000000000000
+            StyledSettings = []
             Text = 'No storage configured'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF98A4B7
@@ -115,6 +123,7 @@ object SetupFrame: TSetupFrame
             OnClick = AddStorageClick
             object StorageButtonLabel: TLabel
               Align = Client
+              StyledSettings = []
               Text = 'Add storage'
               HitTest = False
               TextSettings.Font.Size = 12.000000000000000000
@@ -128,7 +137,7 @@ object SetupFrame: TSetupFrame
           Position.X = 42.000000000000000000
           Position.Y = 408.000000000000000000
           Size.Width = 700.000000000000000000
-          Size.Height = 132.000000000000000000
+          Size.Height = 180.000000000000000000
           XRadius = 12.000000000000000000
           YRadius = 12.000000000000000000
           Fill.Color = xFF111A27
@@ -138,7 +147,8 @@ object SetupFrame: TSetupFrame
             Position.Y = 16.000000000000000000
             Size.Width = 92.000000000000000000
             Size.Height = 22.000000000000000000
-            Text = '03 · FOLDERS'
+            StyledSettings = []
+            Text = '03 - FOLDERS'
             TextSettings.Font.Size = 9.000000000000000000
             TextSettings.FontColor = xFF6675F5
           end
@@ -147,6 +157,7 @@ object SetupFrame: TSetupFrame
             Position.Y = 42.000000000000000000
             Size.Width = 420.000000000000000000
             Size.Height = 28.000000000000000000
+            StyledSettings = []
             Text = 'Folders to protect'
             TextSettings.Font.Size = 16.000000000000000000
             TextSettings.FontColor = xFFF3F6FB
@@ -156,9 +167,17 @@ object SetupFrame: TSetupFrame
             Position.Y = 76.000000000000000000
             Size.Width = 430.000000000000000000
             Size.Height = 24.000000000000000000
+            StyledSettings = []
             Text = 'No folders selected'
             TextSettings.Font.Size = 11.000000000000000000
             TextSettings.FontColor = xFF98A4B7
+          end
+          object SourcesList: TListBox
+            Position.X = 18.000000000000000000
+            Position.Y = 104.000000000000000000
+            Size.Width = 500.000000000000000000
+            Size.Height = 58.000000000000000000
+            ShowCheckboxes = False
           end
           object SourcesButton: TRectangle
             Position.X = 536.000000000000000000
@@ -172,6 +191,7 @@ object SetupFrame: TSetupFrame
             OnClick = AddFolderClick
             object SourcesButtonLabel: TLabel
               Align = Client
+              StyledSettings = []
               Text = 'Add folder'
               HitTest = False
               TextSettings.Font.Size = 12.000000000000000000
@@ -183,7 +203,7 @@ object SetupFrame: TSetupFrame
         end
         object FinishButton: TRectangle
           Position.X = 42.000000000000000000
-          Position.Y = 570.000000000000000000
+          Position.Y = 618.000000000000000000
           Size.Width = 250.000000000000000000
           Size.Height = 52.000000000000000000
           XRadius = 9.000000000000000000
@@ -193,6 +213,7 @@ object SetupFrame: TSetupFrame
           OnClick = FinishClick
           object FinishButtonLabel: TLabel
             Align = Client
+            StyledSettings = []
             Text = 'Complete required steps'
             HitTest = False
             TextSettings.Font.Size = 13.000000000000000000
@@ -205,3 +226,4 @@ object SetupFrame: TSetupFrame
     end
   end
 end
+
