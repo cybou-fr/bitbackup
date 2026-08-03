@@ -34,3 +34,21 @@ else()
 endif()
 
 add_test(NAME bbcore_tests COMMAND bbcore_tests)
+
+# Public ABI smoke test: pure C, public header only, linked to the actual library target.
+add_executable(bbcore_abi_tests abi_smoke.c)
+target_link_libraries(bbcore_abi_tests PRIVATE bbcore)
+
+if(MSVC)
+    target_compile_options(bbcore_abi_tests PRIVATE /W4)
+else()
+    target_compile_options(bbcore_abi_tests PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+if(WIN32 AND BBCORE_SHARED)
+    add_custom_command(TARGET bbcore_abi_tests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:bbcore> $<TARGET_FILE_DIR:bbcore_abi_tests>)
+endif()
+
+add_test(NAME bbcore_abi_tests COMMAND bbcore_abi_tests)

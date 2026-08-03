@@ -59,6 +59,9 @@ Restoring reverses the pipeline and verifies the result against the original BLA
 Early development. The `bbk/1` container format is under active design; the core is
 partially implemented and must not yet be used for valuable data.
 
+The tracked [FORMAT.md](FORMAT.md) is the normative draft and explicitly lists the sections
+that must be completed before the format can be frozen.
+
 | Component | State |
 |---|---|
 | Format specification | in progress; normative public specification not yet published |
