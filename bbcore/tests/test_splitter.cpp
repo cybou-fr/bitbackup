@@ -214,9 +214,13 @@ BB_TEST(split_shard_count_accounts_for_a_partial_stripe)
 {
     // 8 фрагментов — ровно одна stripe: 8 data + 3 parity.
     BB_CHECK_EQ(bb::SplitShardCount(8, 8, 3), std::uint64_t{11});
-    // Девятый начинает вторую stripe, и parity у неё свои.
-    BB_CHECK_EQ(bb::SplitShardCount(9, 8, 3), std::uint64_t{22});
-    BB_CHECK_EQ(bb::SplitShardCount(1, 8, 3), std::uint64_t{11});
+
+    // Девятый начинает вторую stripe, и parity у неё свои: 9 data + 6 parity.
+    // Не 22 — несуществующих позиций второй stripe в хранилище нет.
+    BB_CHECK_EQ(bb::SplitShardCount(9, 8, 3), std::uint64_t{15});
+
+    // Один фрагмент — одна stripe из одного data shard и трёх parity.
+    BB_CHECK_EQ(bb::SplitShardCount(1, 8, 3), std::uint64_t{4});
     BB_CHECK_EQ(bb::SplitShardCount(0, 8, 3), std::uint64_t{0});
 }
 

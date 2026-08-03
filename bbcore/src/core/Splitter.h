@@ -95,8 +95,13 @@ bb_status SplitFile(const FileKey&      k_file,
                     std::vector<Fragment>& out_fragments,
                     SplitProfile&          out_profile);
 
-/// Сколько всего шардов (data + parity) даст такое число фрагментов.
-/// Последняя stripe может быть неполной, но parity у неё всё равно свои.
+/// Сколько объектов (data + parity) даст такое число фрагментов.
+///
+/// Считаются реально существующие: у неполной последней stripe ровно столько
+/// data shards, сколько фрагментов в неё попало, а parity всё равно свои (§10).
+/// Отсюда count = fragment_count + stripes * rs_parity, а не
+/// stripes * (rs_data + rs_parity) — иначе потолок §8 срабатывал бы раньше
+/// времени на несуществующих позициях.
 std::uint64_t SplitShardCount(std::uint64_t fragment_count,
                               std::uint32_t rs_data,
                               std::uint32_t rs_parity);

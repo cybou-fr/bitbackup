@@ -12,6 +12,7 @@ add_executable(bbcore_tests
     test_merkle.cpp
     test_object_name.cpp
     test_splitter.cpp
+    test_stripe_builder.cpp
     test_kem.cpp
     test_shake.cpp
     test_x25519.cpp

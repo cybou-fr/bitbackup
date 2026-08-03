@@ -38,6 +38,7 @@ set(BBCORE_SOURCES
     src/core/KeySchedule.cpp
     src/core/MerkleTree.cpp
     src/core/Splitter.cpp
+    src/core/StripeBuilder.cpp
     src/crypto/Aead.cpp
     src/crypto/Hash.cpp
     src/crypto/HybridKem.cpp

@@ -59,7 +59,7 @@ std::uint64_t SplitShardCount(std::uint64_t fragment_count,
         return 0;
     }
     const std::uint64_t stripes = CeilDiv(fragment_count, rs_data);
-    return stripes * (static_cast<std::uint64_t>(rs_data) + rs_parity);
+    return fragment_count + stripes * rs_parity;
 }
 
 bool SplitFragments(const FileKey&      k_file,
