@@ -34,11 +34,15 @@ endif()
 set(BBCORE_SOURCES
     src/api/Status.cpp
     src/api/Names.cpp
+    src/api/Identity.cpp
     src/crypto/Hash.cpp
     src/crypto/Kem.cpp
     src/crypto/Shake.cpp
     src/crypto/X25519.cpp
+    src/identity/Identity.cpp
     src/util/Base32.cpp
+    src/util/Bip39.cpp
+    src/util/Bip39Wordlist.cpp
     src/util/SecureMemory.cpp
 )
 

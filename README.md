@@ -69,7 +69,8 @@ partially implemented.
 | ML-KEM-1024 | implemented, deterministic keygen from seed verified |
 | X25519 | implemented, tested against RFC 7748 vectors |
 | BLAKE3 | implemented, tested against the official vectors |
-| Identity derivation, BIP39 | not started |
+| Identity derivation, BIP39 | implemented, tested against the official vectors |
+| ML-DSA-87 signatures | not started, needed only for transfers |
 | Hybrid KEM combiner | not started |
 | AES-256-GCM-SIV | not started |
 | Splitter, Merkle, CBOR | not started |
