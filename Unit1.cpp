@@ -1,10 +1,10 @@
-﻿#include <fmx.h>
+#include <fmx.h>
 #pragma hdrstop
 
 #include "Unit1.h"
-#include "ui/UnlockFrame.h"
-#include "ui/SetupFrame.h"
-#include "ui/OverviewFrame.h"
+#include "UnlockFrame.h"
+#include "SetupFrame.h"
+#include "OverviewFrame.h"
 
 #pragma package(smart_init)
 #pragma resource "*.fmx"

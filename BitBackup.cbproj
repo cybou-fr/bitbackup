@@ -201,38 +201,38 @@
             <BuildOrder>1</BuildOrder>
         </CppCompile>
         <FormResources Include="Unit1.fmx"/>
-        <CppCompile Include="ui\AppConfig.cpp">
-            <DependentOn>ui\AppConfig.h</DependentOn>
+        <CppCompile Include="AppConfig.cpp">
+            <DependentOn>AppConfig.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
-        <CppCompile Include="ui\UnlockFrame.cpp">
+        <CppCompile Include="UnlockFrame.cpp">
             <Form>UnlockFrame</Form>
             <FormType>fmx</FormType>
-            <DependentOn>ui\UnlockFrame.h</DependentOn>
+            <DependentOn>UnlockFrame.h</DependentOn>
             <BuildOrder>4</BuildOrder>
         </CppCompile>
-        <FormResources Include="ui\UnlockFrame.fmx"/>
-        <CppCompile Include="ui\SetupFrame.cpp">
+        <FormResources Include="UnlockFrame.fmx"/>
+        <CppCompile Include="SetupFrame.cpp">
             <Form>SetupFrame</Form>
             <FormType>fmx</FormType>
-            <DependentOn>ui\SetupFrame.h</DependentOn>
+            <DependentOn>SetupFrame.h</DependentOn>
             <BuildOrder>5</BuildOrder>
         </CppCompile>
-        <FormResources Include="ui\SetupFrame.fmx"/>
-        <CppCompile Include="ui\OverviewFrame.cpp">
+        <FormResources Include="SetupFrame.fmx"/>
+        <CppCompile Include="OverviewFrame.cpp">
             <Form>OverviewFrame</Form>
             <FormType>fmx</FormType>
-            <DependentOn>ui\OverviewFrame.h</DependentOn>
+            <DependentOn>OverviewFrame.h</DependentOn>
             <BuildOrder>6</BuildOrder>
         </CppCompile>
-        <FormResources Include="ui\OverviewFrame.fmx"/>
-        <CppCompile Include="ui\StorageDialog.cpp">
+        <FormResources Include="OverviewFrame.fmx"/>
+        <CppCompile Include="StorageDialog.cpp">
             <Form>StorageDialog</Form>
             <FormType>fmx</FormType>
-            <DependentOn>ui\StorageDialog.h</DependentOn>
+            <DependentOn>StorageDialog.h</DependentOn>
             <BuildOrder>7</BuildOrder>
         </CppCompile>
-        <FormResources Include="ui\StorageDialog.fmx"/>
+        <FormResources Include="StorageDialog.fmx"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
