@@ -76,6 +76,7 @@ that must be completed before the format can be frozen.
 | ML-DSA-87 signatures | not started, needed only for transfers |
 | Hybrid KEM combiner | implemented, golden vectors frozen, **not yet audited** |
 | Splitter, Merkle, CBOR metadata | implemented, tested |
+| File instance, processing profile and file ID derivation | implemented, golden vectors |
 | Compression (zstd) | not started |
 | Reed–Solomon | implemented, fuzzed over 10 000 stripes |
 | Storage backends | not started |

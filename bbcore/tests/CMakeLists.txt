@@ -6,6 +6,8 @@ add_executable(bbcore_tests
     test_bip39.cpp
     test_bip39_vectors.cpp
     test_blake3.cpp
+    test_chunk_format.cpp
+    test_file_identity.cpp
     test_hybrid_kem.cpp
     test_identity.cpp
     test_key_schedule.cpp

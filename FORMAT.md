@@ -63,6 +63,42 @@ an authenticating, canonical metadata value. The full storage object size is req
 derive the shard-core length. Random tail padding MUST be removed according to authenticated
 metadata and MUST NOT overlap the shard core.
 
+## File and processing identities
+
+`file_instance_id` identifies a logical watched path independently of its current physical
+source location:
+
+```text
+BLAKE3-keyed(k_instance,
+  "bbk/1/file-instance" ||
+  u32be(len(root_label)) || root_label ||
+  u32be(len(relative_path)) || relative_path)
+```
+
+Both strings are strict UTF-8. `root_label` is one nonempty component. `relative_path` uses
+`/`, is nonempty and contains no empty, `.` or `..` components.
+
+The canonical processing profile byte string is:
+
+```text
+"bbk/1/processing" ||
+u16be(profile_version) || transform_id(4) ||
+u32be(split_min) || u32be(split_avg) || u32be(split_max) || u32be(split_align) ||
+u16be(rs_data) || u16be(rs_parity) || u8(pad_shards) ||
+u16be(metadata_schema) || u16be(shard_codec) || u16be(rs_codec)
+```
+
+Suite 1 registers profile version, metadata schema, shard codec and RS codec as 1.
+`processing_id = BLAKE3(canonical_processing_profile)`.
+
+```text
+file_id = BLAKE3-keyed(k_fileid,
+  "bbk/1/file-id" || file_instance_id || content_hash || processing_id)
+```
+
+Thus changing compression/transform, split geometry, RS geometry, padding policy or any
+codec/schema version changes `file_id`, `K_file` and every object name.
+
 ## Hybrid envelope
 
 For any byte string `x`:
@@ -150,8 +186,8 @@ promoted unchanged. Internal nodes and leaf hashing use the suite-1 domains impl
 the key schedule. Reed-Solomon uses GF(2^8) and a systematic Cauchy matrix; the final stripe
 uses its actual data count while retaining registered parity positions.
 
-Precise field polynomial, matrix formula, shard-core encryption/AAD, file-id and processing
-profile derivations remain **unresolved normative sections**. Golden complete-container
+Precise field polynomial, matrix formula and shard-core encryption/AAD remain
+**unresolved normative sections**. Golden complete-container
 vectors are also required. Until these are written and independently reproduced, `bbk/1`
 MUST remain draft.
 

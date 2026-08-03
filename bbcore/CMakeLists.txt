@@ -38,6 +38,7 @@ set(BBCORE_SOURCES
     src/api/State.cpp
     src/api/Chunk.cpp
     src/core/ChunkFormat.cpp
+    src/core/FileIdentity.cpp
     src/core/KeySchedule.cpp
     src/core/MerkleTree.cpp
     src/core/MetadataCodec.cpp
