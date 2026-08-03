@@ -1,0 +1,187 @@
+object OverviewFrame: TOverviewFrame
+  Size.Width = 790.000000000000000000
+  Size.Height = 603.000000000000000000
+  Size.PlatformDefault = False
+  object Background: TRectangle
+    Align = Client
+    Fill.Color = xFF090D14
+    Stroke.Kind = None
+    object Scroll: TVertScrollBox
+      Align = Client
+      ShowScrollBars = True
+      object Canvas: TLayout
+        Align = Top
+        Height = 650.000000000000000000
+        object TitleLabel: TLabel
+          Position.X = 42.000000000000000000
+          Position.Y = 28.000000000000000000
+          Size.Width = 520.000000000000000000
+          Size.Height = 44.000000000000000000
+          Text = 'Backup workspace'
+          TextSettings.Font.Size = 27.000000000000000000
+          TextSettings.FontColor = xFFF3F6FB
+        end
+        object DescriptionLabel: TLabel
+          Position.X = 42.000000000000000000
+          Position.Y = 72.000000000000000000
+          Size.Width = 560.000000000000000000
+          Size.Height = 38.000000000000000000
+          Text = 'Your identity, storage index and configured folders are ready.'
+          TextSettings.Font.Size = 12.000000000000000000
+          TextSettings.FontColor = xFF98A4B7
+        end
+        object RunButton: TRectangle
+          Position.X = 590.000000000000000000
+          Position.Y = 34.000000000000000000
+          Size.Width = 152.000000000000000000
+          Size.Height = 50.000000000000000000
+          XRadius = 9.000000000000000000
+          YRadius = 9.000000000000000000
+          Fill.Color = xFF6675F5
+          Stroke.Kind = None
+          OnClick = RunBackupClick
+          object RunButtonLabel: TLabel
+            Align = Client
+            Text = 'Run backup'
+            HitTest = False
+            TextSettings.Font.Size = 13.000000000000000000
+            TextSettings.FontColor = xFFF3F6FB
+            TextSettings.HorzAlign = Center
+            TextSettings.VertAlign = Center
+          end
+        end
+        object IdentityCard: TRectangle
+          Position.X = 42.000000000000000000
+          Position.Y = 130.000000000000000000
+          Size.Width = 218.000000000000000000
+          Size.Height = 116.000000000000000000
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          Fill.Color = xFF111A27
+          Stroke.Color = xFF243044
+          object IdentityTitle: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 18.000000000000000000
+            Size.Width = 180.000000000000000000
+            Size.Height = 26.000000000000000000
+            Text = 'Identity'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.FontColor = xFFF3F6FB
+          end
+          object IdentityStatus: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 55.000000000000000000
+            Size.Width = 185.000000000000000000
+            Size.Height = 36.000000000000000000
+            Text = 'Identity #0'#13#10'Unlocked'
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.FontColor = xFF5CDB9B
+          end
+        end
+        object StorageCard: TRectangle
+          Position.X = 276.000000000000000000
+          Position.Y = 130.000000000000000000
+          Size.Width = 218.000000000000000000
+          Size.Height = 116.000000000000000000
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          Fill.Color = xFF111A27
+          Stroke.Color = xFF243044
+          object StorageTitle: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 18.000000000000000000
+            Size.Width = 180.000000000000000000
+            Size.Height = 26.000000000000000000
+            Text = 'Storage'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.FontColor = xFFF3F6FB
+          end
+          object StorageStatus: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 55.000000000000000000
+            Size.Width = 185.000000000000000000
+            Size.Height = 36.000000000000000000
+            Text = '1 destination'#13#10'Index ready'
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.FontColor = xFF5CDB9B
+          end
+        end
+        object FoldersCard: TRectangle
+          Position.X = 510.000000000000000000
+          Position.Y = 130.000000000000000000
+          Size.Width = 232.000000000000000000
+          Size.Height = 116.000000000000000000
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          Fill.Color = xFF111A27
+          Stroke.Color = xFF243044
+          object FoldersTitle: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 18.000000000000000000
+            Size.Width = 190.000000000000000000
+            Size.Height = 26.000000000000000000
+            Text = 'Backup folders'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.FontColor = xFFF3F6FB
+          end
+          object FoldersStatus: TLabel
+            Position.X = 16.000000000000000000
+            Position.Y = 55.000000000000000000
+            Size.Width = 195.000000000000000000
+            Size.Height = 36.000000000000000000
+            Text = '1 folder enabled'#13#10'Ready'
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.FontColor = xFF5CDB9B
+          end
+        end
+        object PlanTitle: TLabel
+          Position.X = 42.000000000000000000
+          Position.Y = 282.000000000000000000
+          Size.Width = 500.000000000000000000
+          Size.Height = 34.000000000000000000
+          Text = 'Folders to protect'
+          TextSettings.Font.Size = 17.000000000000000000
+          TextSettings.FontColor = xFFF3F6FB
+        end
+        object FolderRow: TRectangle
+          Position.X = 42.000000000000000000
+          Position.Y = 326.000000000000000000
+          Size.Width = 700.000000000000000000
+          Size.Height = 92.000000000000000000
+          XRadius = 10.000000000000000000
+          YRadius = 10.000000000000000000
+          Fill.Color = xFF111A27
+          Stroke.Color = xFF243044
+          object FolderName: TLabel
+            Position.X = 18.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 360.000000000000000000
+            Size.Height = 26.000000000000000000
+            Text = 'Documents · Personal'
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.FontColor = xFFF3F6FB
+          end
+          object FolderPath: TLabel
+            Position.X = 18.000000000000000000
+            Position.Y = 50.000000000000000000
+            Size.Width = 480.000000000000000000
+            Size.Height = 24.000000000000000000
+            Text = 'C:\Users\Alex\Documents  →  Local vault'
+            TextSettings.Font.Size = 11.000000000000000000
+            TextSettings.FontColor = xFF98A4B7
+          end
+          object FolderState: TLabel
+            Position.X = 570.000000000000000000
+            Position.Y = 32.000000000000000000
+            Size.Width = 105.000000000000000000
+            Size.Height = 26.000000000000000000
+            Text = 'Ready'
+            TextSettings.Font.Size = 12.000000000000000000
+            TextSettings.FontColor = xFF5CDB9B
+            TextSettings.HorzAlign = Trailing
+          end
+        end
+      end
+    end
+  end
+end
