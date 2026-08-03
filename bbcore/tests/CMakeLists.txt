@@ -19,6 +19,7 @@ add_executable(bbcore_tests
     test_stripe_builder.cpp
     test_kem.cpp
     test_shake.cpp
+    test_shard_codec.cpp
     test_state.cpp
     test_x25519.cpp
 )

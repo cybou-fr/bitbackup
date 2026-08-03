@@ -177,23 +177,12 @@ BB_TEST(chunk_has_no_plaintext_header)
 
     BB_CHECK_EQ(first.blob.size(), second.blob.size());
 
-    // Совпадать обязано только shard core — он не шифруется повторно, его
-    // подаёт вызывающий. Всё, что до него, обязано различаться целиком.
-    const std::size_t prefix_and_metadata =
-        bb::kChunkPrefixLen + BB_META_CLASS_MIN + BB_TAG_LEN;
-
-    std::size_t identical = 0;
-    for (std::size_t i = 0; i < prefix_and_metadata; ++i) {
-        if (first.blob[i] == second.blob[i]) {
-            ++identical;
-        }
-    }
-
-    // При равномерном шуме ожидается около 1/256 совпадений. Порог в 2% даёт
-    // огромный запас и всё равно ловит любой фиксированный заголовок: даже
-    // четырёхбайтовый magic на 5792 байтах не прошёл бы, будь он один, — но
-    // главное, что константной области нет вовсе.
-    BB_CHECK(identical < prefix_and_metadata / 50);
+    // Свежая hybrid encapsulation обязана менять конверт. Метаданные могут
+    // совпадать: для одного K_file, имени объекта и индекса их AEAD намеренно
+    // детерминирован. Поэтому статистика совпадений по всей области была бы
+    // ложным тестом открытого заголовка.
+    BB_CHECK(std::memcmp(first.blob.data(), second.blob.data(),
+                         bb::kChunkPrefixLen) != 0);
 
     // Ни одного из старых полей заголовка: magic "BBK1" в начале объекта.
     BB_CHECK(std::memcmp(first.blob.data(), "BBK1", 4) != 0);

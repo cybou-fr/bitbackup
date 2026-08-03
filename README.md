@@ -77,6 +77,7 @@ that must be completed before the format can be frozen.
 | Hybrid KEM combiner | implemented, golden vectors frozen, **not yet audited** |
 | Splitter, Merkle, CBOR metadata | implemented, tested |
 | File instance, processing profile and file ID derivation | implemented, golden vectors |
+| Data shard authenticated encryption | implemented, context and corruption tested |
 | Compression (zstd) | not started |
 | Reed–Solomon | implemented, fuzzed over 10 000 stripes |
 | Storage backends | not started |

@@ -42,6 +42,7 @@ set(BBCORE_SOURCES
     src/core/KeySchedule.cpp
     src/core/MerkleTree.cpp
     src/core/MetadataCodec.cpp
+    src/core/ShardCodec.cpp
     src/core/Splitter.cpp
     src/core/StripeBuilder.cpp
     src/crypto/Aead.cpp

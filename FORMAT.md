@@ -181,15 +181,28 @@ RS parameters, that `self.stripe` exists, and that `self.position` exists in tha
 
 ## Merkle and Reed-Solomon
 
-Merkle leaves are shard cores in ascending canonical-index order. A lone odd node is
-promoted unchanged. Internal nodes and leaf hashing use the suite-1 domains implemented by
-the key schedule. Reed-Solomon uses GF(2^8) and a systematic Cauchy matrix; the final stripe
-uses its actual data count while retaining registered parity positions.
+For each data position, the suite-1 key schedule derives `K_shard` and `N_shard` from
+`K_file`, the stripe number and the position. AES-256-GCM-SIV encrypts the fragment with:
 
-Precise field polynomial, matrix formula and shard-core encryption/AAD remain
-**unresolved normative sections**. Golden complete-container
-vectors are also required. Until these are written and independently reproduced, `bbk/1`
-MUST remain draft.
+```text
+"bbk/1/shard-aad" || identity_id || file_id ||
+u32be(stripe) || u16be(position) || u32be(fragment_length)
+```
+
+The resulting `fragment_length + 16` bytes are the data shard core. Reed-Solomon is then
+applied systematically to the complete encrypted data shard cores, including their AEAD
+tags. Parity shard cores are the resulting parity symbols and receive no second AEAD layer.
+After reconstruction, every recovered data core MUST pass its AEAD verification before its
+plaintext is released.
+
+Merkle leaves are all data and parity shard cores in ascending canonical-index order. A lone
+odd node is promoted unchanged. Internal nodes and leaf hashing use the suite-1 domains
+implemented by the key schedule. Reed-Solomon uses GF(2^8) and a systematic Cauchy matrix;
+the final stripe uses its actual data count while retaining registered parity positions.
+
+The precise field polynomial and matrix formula remain an **unresolved normative section**.
+Golden complete-container vectors are also required. Until these are written and
+independently reproduced, `bbk/1` MUST remain draft.
 
 ## Local identity state (not a `.bbk` object)
 

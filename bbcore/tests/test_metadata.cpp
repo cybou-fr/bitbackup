@@ -67,7 +67,8 @@ bool Same(const bb::ChunkMetadata& a, const bb::ChunkMetadata& b)
      || a.created != b.created || a.modified != b.modified
      || a.attributes != b.attributes || a.stored_size != b.stored_size
      || a.rs_data != b.rs_data || a.rs_parity != b.rs_parity
-     || a.chunk_count != b.chunk_count || a.self_index != b.self_index
+     || a.chunk_count != b.chunk_count || a.padding != b.padding
+     || a.self_index != b.self_index
      || a.self_stripe != b.self_stripe || a.self_position != b.self_position) {
         return false;
     }
