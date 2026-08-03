@@ -8,7 +8,10 @@ add_executable(bbcore_tests
     test_blake3.cpp
     test_hybrid_kem.cpp
     test_identity.cpp
+    test_key_schedule.cpp
+    test_merkle.cpp
     test_object_name.cpp
+    test_splitter.cpp
     test_kem.cpp
     test_shake.cpp
     test_x25519.cpp
