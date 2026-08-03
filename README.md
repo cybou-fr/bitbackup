@@ -101,4 +101,4 @@ data you cannot afford to lose.
 
 ## License
 
-Not yet chosen.
+[Apache License 2.0](LICENSE).
