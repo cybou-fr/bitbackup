@@ -1,0 +1,30 @@
+# Нормализация переводов строк: в репозитории всегда LF, в рабочей копии —
+# по платформе. Без этого diff'ы между Windows и Linux забиваются мусором.
+* text=auto eol=lf
+
+# RAD Studio переписывает свои файлы с CRLF и ломается на LF.
+*.cbproj    text eol=crlf
+*.cbproj.local text eol=crlf
+*.fmx       text eol=crlf
+*.dfm       text eol=crlf
+
+# Скрипты, которые обязаны остаться LF даже на Windows.
+*.sh        text eol=lf
+
+# Явно текстовые.
+*.c         text
+*.cpp       text
+*.h         text
+*.hpp       text
+*.md        text
+*.txt       text
+*.cmake     text
+CMakeLists.txt text
+
+# Явно бинарные — не трогать и не показывать в diff.
+*.png       binary
+*.ico       binary
+*.res       binary
+*.exe       binary
+*.dll       binary
+*.lib       binary

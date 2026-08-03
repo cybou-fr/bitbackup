@@ -1,0 +1,158 @@
+# ---------------------------------------------------------------------------
+# Internal design docs — not published
+# ---------------------------------------------------------------------------
+docs/
+
+# ---------------------------------------------------------------------------
+# Secrets / credentials — NEVER commit
+# ---------------------------------------------------------------------------
+*Access-Keys*.txt
+*access-keys*.txt
+*.key
+*.pem
+*.pfx
+*.p12
+credentials
+credentials.*
+secrets.*
+.env
+.env.*
+!.env.example
+config.local.*
+
+# ---------------------------------------------------------------------------
+# C++Builder / RAD Studio build output
+# ---------------------------------------------------------------------------
+Win32/
+Win64/
+Win64x/
+OSX32/
+OSX64/
+OSXARM64/
+Android/
+Android64/
+iOSDevice32/
+iOSDevice64/
+iOSSimulator/
+Linux64/
+Debug/
+Release/
+__history/
+__recovery/
+*.local
+*.identcache
+*.projdata
+*.tvsconfig
+*.skincfg
+*.deployproj
+*.stat
+
+# Compiler / linker intermediates
+*.obj
+*.o
+*.d
+*.pch
+*.tds
+*.pdb
+*.pdi
+*.map
+*.drc
+*.rsm
+*.il?
+*.lib
+*.a
+*.so
+*.dylib
+*.exe
+*.dll
+*.bpl
+*.bpi
+*.dcp
+*.dcu
+*.res
+!Icon.res
+
+# ---------------------------------------------------------------------------
+# CMake / bbcore build
+# ---------------------------------------------------------------------------
+build/
+build-*/
+out/
+cmake-build-*/
+_deps/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+compile_commands.json
+*.vcxproj
+*.vcxproj.filters
+*.sln
+!BitBackup.cbproj
+vcpkg_installed/
+
+# ---------------------------------------------------------------------------
+# AI agents / assistants — local state, sessions, metadata
+# ---------------------------------------------------------------------------
+# Claude Code: ignore local state, keep shared project config if you add it
+.claude/
+!.claude/settings.json
+!.claude/commands/
+!.claude/agents/
+.claude/settings.local.json
+CLAUDE.local.md
+.mcp.local.json
+
+# Other assistants
+.cursor/
+.cursorrules
+.cursorignore
+.windsurf/
+.windsurfrules
+.aider*
+.continue/
+.codeium/
+.github/copilot-instructions.local.md
+.gemini/
+.codex/
+.opencode/
+.roo/
+.cline/
+.clinerules.local
+.specstory/
+.ai/
+.agent/
+.agents/
+.sourcegraph/
+repomix-output.*
+*.aiderignore
+
+# Agent scratch / logs
+.scratchpad/
+scratchpad/
+.agent-logs/
+*.agent.log
+
+# ---------------------------------------------------------------------------
+# IDE / editor / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.suo
+*.user
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+.DS_Store
+
+# ---------------------------------------------------------------------------
+# Temp / logs / backups
+# ---------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.~*
+*~
