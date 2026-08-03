@@ -1,7 +1,5 @@
 # BitBackup
 
-[![ci](https://github.com/cybou-fr/bitbackup/actions/workflows/ci.yml/badge.svg)](https://github.com/cybou-fr/bitbackup/actions/workflows/ci.yml)
-
 Cross-platform client for encrypted backup and file transfer.
 
 A file is split into chunks of pseudorandom size. Each chunk is encrypted and becomes a
@@ -92,6 +90,9 @@ Requires CMake 3.20+ and a C++17 compiler.
 ```bash
 cmake -S bbcore -B build && cmake --build build --config Release && ctest --test-dir build -C Release
 ```
+
+So far the build has only been exercised with MSVC on Windows. The POSIX paths are
+straightforward but untested; reports of breakage on Linux or macOS are welcome.
 
 ## Security notice
 
